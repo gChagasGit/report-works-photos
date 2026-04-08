@@ -1,0 +1,55 @@
+# Configurações de caminhos do sistema
+paths:
+  template: "templates/model_fill_v2.xlsx"
+  output: "templates/output_test.xlsx"
+  base_images: "../images_organized" # Caminho base para as fotos organizadas por seção
+
+# Metadados e Estilo Visual
+project_metadata:
+  project_name: "Projeto Relatório de Medição"
+  target_sheet: "Relatório fotográfico" # Se vazio, o motor assume a primeira aba
+  font_family: "Arial"
+  font_size: 18
+
+# Configurações do Motor de Layout (Engine)
+layout_settings:
+  photo_columns: ["B", "D", "F"] # Colunas de ancoragem das fotos
+  image_span: 10                # Quantidade de linhas por quadro de foto
+  row_spacing: 2                # Distância entre o título da seção e a primeira foto
+  default_min_row_height: 23.25 # Altura mínima para evitar achatamento
+  fixed_width_px: 390           # Largura padrão para fotos com 'fix_width: true'
+  sort_method: "date"  # Opções: "date" ou "name"
+
+# Definição das Seções do Relatório
+# Nota: 'fix_width: true' expande a altura da linha; 'false' ajusta a foto ao quadro existente.
+sections:
+  - id: "entorno"
+    label: "Entorno da obra"
+    max_photos: 5
+    fix_width: false
+
+  - id: "geral_obra"
+    label: "Geral da obra"
+    max_photos: 2
+    fix_width: true
+
+  - id: "projetos_ARTs"
+    label: "Projetos/ARTs"
+    max_photos: 4
+    fix_width: false
+
+  - id: "alvara_licenca"
+    label: "Alvará/Licenças"
+    max_photos: 1
+    fix_width: false
+
+  - id: "geral_habitacao"
+    label: "Geral da habitação (EXTERNAS DA TORRE)"
+    max_photos: 1
+    fix_width: true
+
+  - id: "pavimentos"
+    label: "Pavimentos (INTERNAS DA TORRE)"
+    num_pavimentos: [9, 6, 8, 6, 6, 7, 6, 6, 5, 4, 4, 7, 7, 5, 3, 4, 4, 4, 5, 4, 5, 4]
+    max_photos: 119
+    fix_width: true

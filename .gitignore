@@ -1,0 +1,23 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+
+# Arquivos python de test
+generate*.py
+setup*.py
+
+# Arquivos de Saída e Temporários do Excel
+templates/
+~$*.xlsx
+
+# Configurações Pessoais (O usuário deve usar o config_exemplr.yaml)
+config.yaml
+
+# IDEs
+.vscode/
+.idea/

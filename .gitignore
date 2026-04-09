@@ -12,8 +12,8 @@ generate*.py
 setup*.py
 
 # Arquivos de Saída e Temporários do Excel
-templates/
-~$*.xlsx
+relatorio_final.xlsx
+model_base.xlsx
 
 # Pasta de testes
 test/

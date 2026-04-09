@@ -9,9 +9,9 @@ layout_settings:
   row_spacing: 2
   sort_method: date
 paths:
-  base_images: C:/dev/Synderski/images_organized
-  output: C:/dev/Synderski/report-works-photos/templates\relatorio_final2.xlsx
-  template: C:/dev/Synderski/report-works-photos/templates/model_fill_v2.xlsx
+  base_images: images_organized
+  output: templates/relatorio_final.xlsx
+  template: templates/model.xlsx
 project_metadata:
   default_font: Arial
   default_font_size: 18

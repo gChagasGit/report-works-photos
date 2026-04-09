@@ -22,7 +22,6 @@ class ImageHandler:
         
         # Recupera o método de ordenação do YAML (padrão é 'date')
         sort_method = self.config.get('layout_settings', {}).get('sort_method', 'date').lower()
-        print(f"Ordenando fotos por {sort_method.upper()}.")
 
         if sort_method == 'name':
             # Ordenação por nome de arquivo (A-Z)

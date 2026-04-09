@@ -5,7 +5,7 @@ from scripts.report_engine import ReportEngine
 def remove_report(output_path):
     if os.path.exists(output_path):
         os.remove(output_path)
-        print(f"🗑️ Relatório antigo removido: {output_path}")
+        print(f" Relatório antigo removido: {output_path}")
 
 if __name__ == "__main__":
     # Carrega config para pegar caminhos de saída

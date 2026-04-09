@@ -7,11 +7,18 @@ echo   INSTALADOR AUTOMATICO - RELATORIO DE OBRAS
 echo ======================================================
 echo.
 
-:: 1. Verificar Python
-python --version >nul 2>&1
+:: 1. Verificar se o Python existe e se a versão é compatível (Min 3.12)
+python -c "import sys; exit(0) if sys.version_info >= (3, 12) else exit(1)" >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERRO] Python nao encontrado!
-    echo Por favor, instale o Python pela Microsoft Store ou pela site oficial (python.org).
+    echo [ERRO] Python nao encontrado ou versao desatualizada!
+    echo.
+    echo Requisitos: Python 3.12 ou superior.
+    echo.
+    echo O que fazer?
+    echo 1. Abra a Microsoft Store.
+    echo 2. Pesquise por "Python 3.12" e instale.
+    echo 3. Apos instalar, execute este arquivo novamente.
+    echo.
     pause
     exit /b
 )
@@ -24,7 +31,7 @@ if not exist ".venv" (
     :: 2.1. Instalar Dependencias
     echo [2/2] Instalando bibliotecas necessarias... Aguarde.
     call .venv\Scripts\activate 
-    pip install --upgrade pip --quiet
+    python -m pip install --upgrade pip --quiet
     if exist "requirements.txt" (
         pip install -r requirements.txt --quiet
     ) else (
@@ -38,5 +45,3 @@ if not exist ".venv" (
 echo Iniciando interface...
 call .venv\Scripts\activate 
 streamlit run app.py
-
-pause

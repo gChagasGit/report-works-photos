@@ -3,7 +3,7 @@ import yaml
 import os
 import tkinter as tk
 from tkinter import filedialog
-from report_engine import ReportEngine
+from scripts.report_engine import ReportEngine
 
 st.set_page_config(page_title="Gerador de Relatórios Fotográficos", layout="wide")
 
@@ -84,7 +84,7 @@ for idx, section in enumerate(st.session_state.sections):
             st.session_state.sections[idx]['max_photos'] = st.number_input("Fotos", 1, 500, int(section['max_photos']), key=f"max_{idx}")
         with col4:
             st.write('<div style="margin-top: 5px;"></div>', unsafe_allow_html=True)
-            st.session_state.sections[idx]['fix_width'] = st.checkbox("Fix?", section['fix_width'], key=f"fix_{idx}")
+            st.session_state.sections[idx]['fix_width'] = st.checkbox("Fixar Largura", section['fix_width'], key=f"fix_{idx}")
         with col5:
             st.write('<div style="margin-top: 25px;"></div>', unsafe_allow_html=True)
             if st.button(":material/delete:", key=f"del_{idx}"):

@@ -15,6 +15,9 @@ setup*.py
 templates/
 ~$*.xlsx
 
+# Pasta de testes
+test/
+
 # Configurações Pessoais (O usuário deve usar o config_exemplr.yaml)
 config.yaml
 

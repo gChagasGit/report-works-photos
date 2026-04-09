@@ -1,6 +1,6 @@
 import os
 import yaml
-from report_engine import ReportEngine
+from scripts.report_engine import ReportEngine
 
 def remove_report(output_path):
     if os.path.exists(output_path):

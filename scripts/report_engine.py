@@ -1,7 +1,7 @@
 import yaml
 import os
 import xlwings as xw
-from image_handler import ImageHandler
+from scripts.image_handler import ImageHandler
 
 class ReportEngine:
     def __init__(self, config_path):

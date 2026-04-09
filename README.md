@@ -3,7 +3,9 @@
 Este projeto é uma solução de automação em Python desenvolvida para otimizar a elaboração de **Relatórios de Acompanhamento de Empreendimentos** do Banco do Brasil. A ferramenta automatiza a tarefa repetitiva de preenchimento, identificando seções específicas em templates `.xlsx` e inserindo imagens organizadas de forma inteligente, ajustando automaticamente o layout e as dimensões conforme as exigências técnicas.
 
 ### Contexto e Aplicação
+
 No âmbito da engenharia do **CESIN (Central de Serviços Imobiliários)**, o relatório fotográfico é um documento mandatório para o monitoramento de obras e vistorias de ativos vinculados ao Banco do Brasil. Ele serve como lastro para o acompanhamento de medições, custos diretos e a conformidade técnica da construção.
+
 ---
 
 ## Pré-requisitos

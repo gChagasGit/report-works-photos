@@ -27,7 +27,7 @@ sections:
   label: Geral da obra
   max_photos: 2
 - fix_width: false
-  id: projetos_ARTs
+  id: projetos_arts
   label: Projetos/ARTs
   max_photos: 4
 - fix_width: false

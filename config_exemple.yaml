@@ -11,7 +11,7 @@ layout_settings:
     - B
     - D
     - F
-  row_spacing: 2                # Espaçamento (linhas vazias) entre o título da seção e as fotos
+  row_spacing: 2                # Espaçamento (linhas em branco) entre o título da seção e as fotos
   sort_method: date             # Critério de ordenação das fotos na pasta (date ou name)
 
 # Definição dos diretórios e arquivos de trabalho

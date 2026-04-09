@@ -27,7 +27,7 @@ class ImageHandler:
             # Ordenação por nome de arquivo (A-Z)
             files.sort()
         else:
-            # Ordenação por data de modificação (Crescente)
-            files.sort(key=os.path.getmtime)
+            # Ordenação por data de criação do arquivo (Crescente)
+            files.sort(key=os.path.getctime)
 
         return files

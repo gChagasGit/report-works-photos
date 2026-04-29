@@ -5,13 +5,13 @@ import tkinter as tk
 from tkinter import filedialog
 from scripts.report_engine import ReportEngine
 
-st.set_page_config(page_title="Gerador de Relatórios Fotográficos", layout="wide")
+st.set_page_config(page_title="Gerador de Relatórios Fotográficos", layout="wide", initial_sidebar_state="expanded")
 
 # CSS para ajuste fino de layout
 st.markdown("""
     <style>
-        .block-container { padding-top: 1rem; padding-bottom: 2rem; }
-        header { visibility: hidden; height: 0px; }
+        /* Ajuste de padding padrão */
+        .block-container { padding-top: 2rem; padding-bottom: 2rem; }
     </style>
     """, unsafe_allow_html=True)
 

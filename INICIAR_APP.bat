@@ -41,7 +41,11 @@ if not exist ".venv" (
     )
 )
 
-:: 3. Rodar o App
-echo Iniciando interface...
+:: Garante que as novas dependencias do Backend (FastAPI) estao instaladas
 call .venv\Scripts\activate 
-streamlit run app.py
+python -m pip install fastapi uvicorn pydantic --quiet
+
+:: 3. Rodar o App
+echo Iniciando Servidor Backend (FastAPI)...
+call .venv\Scripts\activate 
+python main.py

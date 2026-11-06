@@ -1,0 +1,24 @@
+[tools]
+python = "3.12"
+uv = "latest"
+node = "22"
+
+[tasks.dev]
+description = "Sobe o servidor de desenvolvimento (API)"
+run = "uv run python main.py"
+
+[tasks.test]
+description = "Executa os testes"
+run = "uv run pytest"
+
+[tasks.lint]
+description = "Lint, formatação e tipos"
+run = [
+  "uv run ruff check .",
+  "uv run ruff format --check .",
+  "uv run pyright",
+]
+
+[tasks.build]
+description = "Gera o pacote Python (o frontend entra na etapa 8)"
+run = "uv build"

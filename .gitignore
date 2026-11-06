@@ -32,6 +32,9 @@ config.yaml
 .env.*
 !.env.example
 
+# Marcador local do ai-memory (escolha de captura de cada máquina)
+.ai-memory.toml
+
 # ==============================================================================
 # Arquivos gerados: relatórios, temporários do Excel e uploads
 # ==============================================================================

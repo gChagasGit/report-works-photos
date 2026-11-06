@@ -84,3 +84,14 @@ Minha_Obra/
     ├── foto1.jpg
     └── foto2.jpg
 ```
+
+---
+
+## Desenvolvimento: memória do projeto com ai-memory
+
+O progresso da refatoração é registrado no [ai-memory](https://github.com/akitaonrails/ai-memory) (instalação local, sem LLM e sem chave de API).
+
+*   **Marcador do projeto**: o arquivo `.ai-memory.toml` (workspace `synderski`, projeto `report-works-photos`) autoriza a captura apenas neste repositório e lista os caminhos que nunca são capturados. Ele não é versionado (está no `.gitignore`).
+*   **Captura em modo allowlist**: repositórios sem `.ai-memory.toml` não enviam nenhum evento.
+*   **Recomendação**: inicie os agentes pelo comando `ai-memory run <agente>` (por exemplo, `ai-memory run claude-code` ou `ai-memory run antigravity-cli`) para que a sessão fique associada ao projeto e possa ser retomada. Os hooks também funcionam quando o agente é aberto pela extensão ou IDE, mas essa forma não foi validada com o `run`.
+*   **Verificação**: `ai-memory status` e `ai-memory doctor`. Após reiniciar o agente, pergunte: "What do you remember about this project?".

@@ -1,26 +1,76 @@
-# Ambientes Virtuais
+# ==============================================================================
+# Ambientes virtuais e caches do Python
+# ==============================================================================
 .venv/
 venv/
 env/
-
-# Cache de Python
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
 
-# Arquivos python de test
-generate*.py
-setup*.py
+# ==============================================================================
+# Node / frontend
+# ==============================================================================
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+npm-debug.log*
 
-# Arquivos de Saída e Temporários do Excel
+# ==============================================================================
+# Configuração e segredos locais (use config_exemple.yaml como modelo)
+# ==============================================================================
+config.yaml
+.env
+.env.*
+!.env.example
+
+# ==============================================================================
+# Arquivos gerados: relatórios, temporários do Excel e uploads
+# ==============================================================================
+# Mantém apenas o template oficial versionado; qualquer outro .xlsx em templates/ é local
+templates/*.xlsx
+!templates/model.xlsx
 relatorio_final*.xlsx
 model_base.xlsx
+~$*.xls*
+*.tmp
+output/
+uploads/
+data/
 
-# Pasta de testes
+# Fotos de obra (pesadas e privadas; nunca versionar)
+images/
+images_organized/
+
+# ==============================================================================
+# Scripts e dados de teste manuais (saídas de ~35 MB cada)
+# ==============================================================================
 test/
 
-# Configurações Pessoais (O usuário deve usar o config_exemplr.yaml)
-config.yaml
+# ==============================================================================
+# Logs
+# ==============================================================================
+*.log
+logs/
 
-# IDEs
+# ==============================================================================
+# Sistema operacional
+# ==============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================================================================
+# IDEs e ferramentas locais
+# ==============================================================================
 .vscode/
 .idea/
+.claude/settings.local.json

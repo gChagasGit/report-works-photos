@@ -23,6 +23,7 @@ dev = [
     "ruff>=0.6",
     "pyright>=1.1.380",
     "types-defusedxml>=0.7.0.20260504",
+    "types-openpyxl>=3.1.5.20261017",
 ]
 # Interface Streamlit antiga; sai junto com app.py na etapa de limpeza.
 legacy = ["streamlit>=1.40"]

@@ -54,7 +54,7 @@ export function App() {
   ][active];
 
   return (
-    <Container size="md" py="xl">
+    <Container fluid miw={960} px="lg" py="xl">
       <Stack gap="lg">
         <div>
           <Title order={1}>{strings.app.title}</Title>

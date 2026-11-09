@@ -44,6 +44,20 @@ def _load_xlwings() -> ModuleType:
         raise ExcelUnavailableError(pt_br.ERR_EXCEL_UNAVAILABLE) from error
 
 
+def _com_initialize() -> bool:
+    """Inicializa o COM na thread atual (necessário fora da thread principal, como na API)."""
+    try:
+        pythoncom = importlib.import_module("pythoncom")
+    except ImportError:
+        return False
+    pythoncom.CoInitialize()
+    return True
+
+
+def _com_uninitialize() -> None:
+    importlib.import_module("pythoncom").CoUninitialize()
+
+
 def _image_size(photo: Path) -> tuple[int, int]:
     """Largura e altura em pixels, lidas pelo Pillow."""
     with Image.open(photo) as image:
@@ -68,6 +82,7 @@ class XlwingsWriter:
         self._sheet: Any = None
         self._workdir: tempfile.TemporaryDirectory[str] | None = None
         self._prepared_count = 0
+        self._com_ready = False
 
     # --- ciclo de vida ----------------------------------------------------------------
 
@@ -77,6 +92,7 @@ class XlwingsWriter:
         path = template.resolve()
         if not path.is_file():
             raise TemplateError(pt_br.ERR_TEMPLATE_UNREADABLE.format(detail=path))
+        self._com_ready = self._xw is None and _com_initialize()
         self._app = xw.App(visible=self._visible, add_book=False)
         try:
             self._app.display_alerts = False  # sobrescrever o arquivo de saída sem perguntar
@@ -110,6 +126,9 @@ class XlwingsWriter:
             finally:
                 if workdir is not None:
                     workdir.cleanup()
+                if self._com_ready:
+                    self._com_ready = False
+                    _com_uninitialize()
 
     def __enter__(self) -> Self:
         return self

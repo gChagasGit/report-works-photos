@@ -24,6 +24,17 @@ from report_works.i18n import pt_br
 BYTES_PER_MB = 1024 * 1024
 DEFAULT_STATIC_DIR = Path("frontend") / "dist"
 
+# Variáveis lidas por `Settings.from_env` (um teste confere Docker e compose contra esta lista).
+ENV_VARIABLES = (
+    "REPORT_WORKDIR",
+    "REPORT_MAX_UPLOAD_MB",
+    "CORS_ORIGINS",
+    "REPORT_STATIC_DIR",
+    "REPORT_HOST",
+    "REPORT_PORT",
+    "REPORT_RETENTION_HOURS",
+)
+
 
 def _positive_int(env: Mapping[str, str], name: str, default: int) -> int:
     raw = env.get(name)

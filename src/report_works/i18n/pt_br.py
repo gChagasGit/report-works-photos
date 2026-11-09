@@ -36,6 +36,20 @@ ISSUE_MORE_PHOTOS = (
     'A pasta da seção "{label}" tem {found} fotos; serão usadas as primeiras {used}.'
 )
 
+# --- Layout e inserção no Excel ----------------------------------------------
+ERR_ANCHOR_MISSING = 'A seção "{label}" não tem título no template.'
+ERR_PHOTO_INSERT = "Não foi possível inserir a foto {name} em {cell}: {detail}"
+ERR_EXCEL_UNAVAILABLE = (
+    "A automação do Excel não está disponível. É necessário Windows com Microsoft Excel instalado."
+)
+ERR_WRITER_NOT_OPEN = "O template não foi aberto."
+ISSUE_SECTION_OVERFLOW = (
+    'A seção "{label}" ocupa até a linha {last}, mas a seção seguinte começa na linha {next}.'
+)
+ISSUE_BEYOND_TEMPLATE = (
+    'A seção "{label}" ocupa até a linha {last}, além do fim do template (linha {template_last}).'
+)
+
 # --- Descrição de erros de validação (campo: motivo) -------------------------
 FIELD_ERROR = "{field}: {reason}"
 REASON_MISSING = "campo obrigatório"

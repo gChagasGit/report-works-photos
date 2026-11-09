@@ -2,6 +2,7 @@ import {
   Accordion,
   Autocomplete,
   Badge,
+  Box,
   Button,
   FileButton,
   Group,
@@ -26,6 +27,21 @@ import {
   type SectionDraft,
 } from "../domain/report";
 import { strings } from "../strings/pt-BR";
+
+// Rótulo e campo ficam sempre na mesma altura; descrição e erro descem para baixo do campo.
+const INPUT_ORDER = {
+  inputWrapperOrder: ["label", "input", "description", "error"] as (
+    "label" | "input" | "description" | "error"
+  )[],
+};
+
+// Colunas com largura mínima: usam o espaço horizontal sem distorcer os campos.
+const FIELDS_GRID = {
+  display: "grid",
+  gridTemplateColumns: "minmax(150px, 1fr) minmax(260px, 2.5fr) minmax(130px, 0.7fr)",
+  gap: "var(--mantine-spacing-md)",
+  alignItems: "start",
+} as const;
 
 const ERROR_TEXT = {
   invalid_id: strings.sections.invalidId,
@@ -83,8 +99,9 @@ function SectionCard({
   return (
     <Paper withBorder p="md" data-testid={`section-${section.id || section.key}`}>
       <Stack gap="xs">
-        <Group align="flex-start" grow>
+        <Box style={FIELDS_GRID}>
           <TextInput
+            {...INPUT_ORDER}
             label={strings.sections.folder}
             description={strings.sections.folderHelp}
             value={section.id}
@@ -92,6 +109,7 @@ function SectionCard({
             onChange={(event) => onChange({ id: event.currentTarget.value })}
           />
           <Autocomplete
+            {...INPUT_ORDER}
             label={strings.sections.label}
             data={titles}
             value={section.label}
@@ -100,13 +118,14 @@ function SectionCard({
             onChange={(label) => onChange({ label })}
           />
           <NumberInput
+            {...INPUT_ORDER}
             label={strings.sections.maxPhotos}
             min={1}
             value={section.max_photos}
             error={text(errors.max_photos)}
             onChange={(value) => onChange({ max_photos: toNumber(value) })}
           />
-        </Group>
+        </Box>
         <Group>
           <Switch
             label={strings.sections.fixWidth}
@@ -121,6 +140,7 @@ function SectionCard({
         </Group>
         {section.grouped && (
           <TextInput
+            {...INPUT_ORDER}
             label={strings.sections.groupSizes}
             description={strings.sections.groupSizesHelp}
             value={section.group_sizes_text}

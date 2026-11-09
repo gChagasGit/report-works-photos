@@ -1,11 +1,11 @@
-import { Alert, Badge, Group, Stack, Table, Text } from "@mantine/core";
+import { Alert, Badge, Button, Group, Stack, Table, Text } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { useMutation } from "@tanstack/react-query";
-import { uploadPhotosZip } from "../api/endpoints";
+import { useRef, useState } from "react";
+import { uploadPhotosArchive, uploadPhotosFolder } from "../api/endpoints";
 import { ErrorAlert } from "../components/ErrorAlert";
+import { planUpload } from "../domain/photos";
 import { strings } from "../strings/pt-BR";
-
-const ZIP_MIMES = ["application/zip", "application/x-zip-compressed"];
 
 type Props = {
   workspaceId: string | null;
@@ -14,27 +14,63 @@ type Props = {
 };
 
 export function PhotosStep({ workspaceId, counts, onChanged }: Props) {
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const folderInput = useRef<HTMLInputElement>(null);
+
   const upload = useMutation({
-    mutationFn: (file: File) => uploadPhotosZip(workspaceId ?? "", file),
+    mutationFn: async (files: File[]) => {
+      const plan = planUpload(files);
+      if (plan.kind === "archive") return uploadPhotosArchive(workspaceId ?? "", plan.file);
+      const result = await uploadPhotosFolder(workspaceId ?? "", plan.entries, (done, total) =>
+        setProgress({ done, total }),
+      );
+      return { ...result, skipped: result.skipped + plan.ignored };
+    },
     onSuccess: onChanged,
+    onSettled: () => setProgress(null),
   });
   const received = upload.data ? Object.values(upload.data.sections).reduce((a, b) => a + b, 0) : 0;
   const folders = Object.entries(counts);
+  const send = (files: File[]) => files.length > 0 && upload.mutate(files);
 
   return (
     <Stack>
-      <Dropzone
-        onDrop={(files) => files[0] && upload.mutate(files[0])}
-        accept={{ ...Object.fromEntries(ZIP_MIMES.map((mime) => [mime, [".zip"]])) }}
-        multiple={false}
-        loading={upload.isPending}
-        disabled={workspaceId === null}
-      >
-        <Text ta="center">{upload.isPending ? strings.photos.uploading : strings.photos.drop}</Text>
+      <Dropzone onDrop={send} loading={upload.isPending} disabled={workspaceId === null}>
+        <Text ta="center">
+          {upload.isPending
+            ? progress
+              ? strings.photos.uploadingProgress(progress.done, progress.total)
+              : strings.photos.uploading
+            : strings.photos.drop}
+        </Text>
         <Text ta="center" size="sm" c="dimmed">
           {strings.photos.hint}
         </Text>
       </Dropzone>
+      <Group justify="center">
+        <Button
+          variant="light"
+          loading={upload.isPending}
+          disabled={workspaceId === null}
+          onClick={() => folderInput.current?.click()}
+        >
+          {strings.photos.chooseFolder}
+        </Button>
+        <input
+          ref={(node) => {
+            folderInput.current = node;
+            node?.setAttribute("webkitdirectory", "");
+          }}
+          data-testid="folder-input"
+          type="file"
+          multiple
+          hidden
+          onChange={(event) => {
+            send(Array.from(event.target.files ?? []));
+            event.target.value = "";
+          }}
+        />
+      </Group>
       <ErrorAlert error={upload.error} />
       {upload.data && (
         <Alert color="green">

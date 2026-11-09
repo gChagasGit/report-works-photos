@@ -15,6 +15,7 @@ dependencies = [
     "xlwings>=0.33; sys_platform == 'win32'",
     "defusedxml>=0.7.1",
     "python-multipart>=0.0.33",
+    "rarfile>=4.5",
 ]
 
 [dependency-groups]

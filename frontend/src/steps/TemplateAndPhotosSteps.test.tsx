@@ -75,7 +75,7 @@ describe("TemplateStep", () => {
 describe("PhotosStep", () => {
   it("envia o ZIP, mostra o resumo e avisa a tela para atualizar as contagens", async () => {
     mockApi({
-      "POST /api/workspaces/ws/photos/zip": () =>
+      "POST /api/workspaces/ws/photos/archive": () =>
         jsonResponse({ sections: { entorno: 5, geral_obra: 2 }, skipped: 3 }),
     });
     const onChanged = vi.fn();
@@ -91,6 +91,45 @@ describe("PhotosStep", () => {
     expect(await screen.findByText(/7 fotos recebidas/)).toBeInTheDocument();
     expect(screen.getByText(/3 arquivos ignorados/)).toBeInTheDocument();
     expect(onChanged).toHaveBeenCalled();
+  });
+
+  it("aceita um arquivo RAR", async () => {
+    mockApi({
+      "POST /api/workspaces/ws/photos/archive": () =>
+        jsonResponse({ sections: { entorno: 2 }, skipped: 0 }),
+    });
+    const { container } = renderWithProviders(
+      <PhotosStep workspaceId="ws" counts={{}} onChanged={() => undefined} />,
+    );
+
+    await userEvent.upload(fileInput(container), new File(["x"], "fotos.rar"));
+
+    expect(await screen.findByText(/2 fotos recebidas/)).toBeInTheDocument();
+  });
+
+  it("envia uma pasta inteira com o caminho relativo de cada imagem", async () => {
+    let sent: FormData | undefined;
+    mockApi({
+      "POST /api/workspaces/ws/photos/folder": (call) => {
+        sent = call.body as FormData;
+        return jsonResponse({ sections: { entorno: 1, geral_obra: 1 }, skipped: 0 });
+      },
+    });
+    renderWithProviders(<PhotosStep workspaceId="ws" counts={{}} onChanged={() => undefined} />);
+    const entorno = new File(["x"], "a.png", { type: "image/png" });
+    const geral = new File(["x"], "b.jpg", { type: "image/jpeg" });
+    const notes = new File(["x"], "leia.txt", { type: "text/plain" });
+    Object.defineProperty(entorno, "webkitRelativePath", { value: "obra/entorno/a.png" });
+    Object.defineProperty(geral, "webkitRelativePath", { value: "obra/geral_obra/b.jpg" });
+    Object.defineProperty(notes, "webkitRelativePath", { value: "obra/entorno/leia.txt" });
+
+    await userEvent.upload(screen.getByTestId("folder-input"), [entorno, geral, notes], {
+      applyAccept: false,
+    });
+
+    expect(await screen.findByText(/2 fotos recebidas/)).toBeInTheDocument();
+    expect(screen.getByText(/1 arquivo ignorado/)).toBeInTheDocument();
+    expect(sent?.getAll("paths")).toEqual(["obra/entorno/a.png", "obra/geral_obra/b.jpg"]);
   });
 
   it("lista as pastas já recebidas com a quantidade de fotos", () => {

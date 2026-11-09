@@ -22,7 +22,8 @@ def test_contract_documents_the_main_routes() -> None:
     assert {
         "/api/workspaces",
         "/api/workspaces/{workspace_id}/template",
-        "/api/workspaces/{workspace_id}/photos/zip",
+        "/api/workspaces/{workspace_id}/photos/archive",
+        "/api/workspaces/{workspace_id}/photos/folder",
         "/api/workspaces/{workspace_id}/validate",
         "/api/jobs",
         "/api/jobs/{job_id}/events",

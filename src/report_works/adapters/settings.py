@@ -8,6 +8,7 @@
 | REPORT_STATIC_DIR       | (vazio)         | pasta do frontend compilado, servida em `/`        |
 | REPORT_HOST / REPORT_PORT | 127.0.0.1 / 8000 | endereço do servidor                             |
 | REPORT_RETENTION_HOURS  | 24              | tempo de guarda das áreas de trabalho              |
+| REPORT_RAR_TOOL         | (automático)    | UnRAR/7-Zip/bsdtar usado para abrir envios .rar    |
 """
 
 from __future__ import annotations
@@ -33,6 +34,7 @@ ENV_VARIABLES = (
     "REPORT_HOST",
     "REPORT_PORT",
     "REPORT_RETENTION_HOURS",
+    "REPORT_RAR_TOOL",
 )
 
 
@@ -60,6 +62,7 @@ class Settings:
     host: str = "127.0.0.1"
     port: int = 8000
     retention_hours: int = 24
+    rar_tool: Path | None = None
 
     @property
     def max_upload_bytes(self) -> int:
@@ -76,6 +79,7 @@ class Settings:
         source = os.environ if env is None else env
         origins = tuple(o.strip() for o in source.get("CORS_ORIGINS", "").split(",") if o.strip())
         static = source.get("REPORT_STATIC_DIR", "").strip()
+        rar_tool = source.get("REPORT_RAR_TOOL", "").strip()
         if not static and detect_static and (DEFAULT_STATIC_DIR / "index.html").is_file():
             static = str(DEFAULT_STATIC_DIR)
         return cls(
@@ -86,4 +90,5 @@ class Settings:
             host=source.get("REPORT_HOST", "").strip() or "127.0.0.1",
             port=_positive_int(source, "REPORT_PORT", 8000),
             retention_hours=_positive_int(source, "REPORT_RETENTION_HOURS", 24),
+            rar_tool=Path(rar_tool) if rar_tool else None,
         )

@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
+from report_works.adapters import workspace_store
 from report_works.adapters.settings import Settings
 from report_works.adapters.workspace_store import WorkspaceStore
 from report_works.domain.errors import (
@@ -162,7 +163,7 @@ def test_zip_uses_the_parent_folder_as_the_section_id(store: WorkspaceStore) -> 
         }
     )
 
-    sections, skipped = store.save_zip(workspace, archive)
+    sections, skipped = store.save_archive(workspace, archive)
 
     assert sections == {"entorno": 1, "geral_obra": 1}
     assert skipped == 3
@@ -183,14 +184,14 @@ def test_zip_with_unsafe_paths_is_refused(store: WorkspaceStore, name: str) -> N
     workspace = store.create()
 
     with pytest.raises(UnsupportedFileError, match="inseguro"):
-        store.save_zip(workspace, _zip({name: _png_bytes()}))
+        store.save_archive(workspace, _zip({name: _png_bytes()}))
 
     assert not any(store.photos_dir(workspace).rglob("*.png"))
 
 
 def test_zip_that_is_not_a_zip_is_refused(store: WorkspaceStore) -> None:
-    with pytest.raises(UnsupportedFileError, match="ZIP é inválido"):
-        store.save_zip(store.create(), io.BytesIO(b"not a zip"))
+    with pytest.raises(UnsupportedFileError, match="ZIP ou RAR válido"):
+        store.save_archive(store.create(), io.BytesIO(b"not a zip"))
 
 
 def test_zip_total_size_is_limited_while_extracting(tmp_path: Path) -> None:
@@ -199,7 +200,77 @@ def test_zip_total_size_is_limited_while_extracting(tmp_path: Path) -> None:
     archive = _zip({"entorno/a.png": b"x" * 80, "entorno/b.png": b"x" * 80})
 
     with pytest.raises(UploadTooLargeError):
-        small.save_zip(workspace, archive)
+        small.save_archive(workspace, archive)
+
+
+def test_folder_upload_uses_the_parent_folder_as_the_section_id(store: WorkspaceStore) -> None:
+    workspace = store.create()
+    png = _png_bytes()
+    files = [
+        ("obra/entorno/1.png", io.BytesIO(png)),
+        ("obra\\Geral_Obra\\2.JPG", io.BytesIO(png)),
+        ("solto.png", io.BytesIO(png)),
+        ("obra/entorno/leia.txt", io.BytesIO(b"x")),
+    ]
+
+    sections, skipped = store.save_folder(workspace, files)
+
+    assert sections == {"entorno": 1, "geral_obra": 1}
+    assert skipped == 2
+    assert (store.photos_dir(workspace) / "geral_obra" / "2.JPG").is_file()
+
+
+def test_folder_upload_with_unsafe_path_is_refused(store: WorkspaceStore) -> None:
+    workspace = store.create()
+
+    with pytest.raises(UnsupportedFileError, match="inseguro"):
+        store.save_folder(workspace, [("../evil/a.png", io.BytesIO(_png_bytes()))])
+
+    assert not any(store.photos_dir(workspace).rglob("*.png"))
+
+
+def test_folder_upload_total_size_is_limited(tmp_path: Path) -> None:
+    small = WorkspaceStore(tmp_path / "w", max_upload_bytes=100)
+    workspace = small.create()
+    files = [("entorno/a.png", io.BytesIO(b"x" * 80)), ("entorno/b.png", io.BytesIO(b"x" * 80))]
+
+    with pytest.raises(UploadTooLargeError):
+        small.save_folder(workspace, files)
+
+
+RAR_FIXTURE = Path(__file__).parents[2] / "fixtures" / "obra.rar"
+
+
+def _rar_tool_available() -> bool:
+    try:
+        workspace_store._configure_rar_tool(None)
+    except UnsupportedFileError:
+        return False
+    return True
+
+
+@pytest.mark.skipif(not _rar_tool_available(), reason="nenhuma ferramenta de RAR instalada")
+def test_rar_is_extracted_by_section(store: WorkspaceStore) -> None:
+    workspace = store.create()
+
+    with RAR_FIXTURE.open("rb") as source:
+        sections, skipped = store.save_archive(workspace, source)
+
+    assert sections == {"entorno": 1, "geral_obra": 1}
+    assert skipped == 1
+    assert (store.photos_dir(workspace) / "geral_obra" / "2.png").is_file()
+
+
+def test_rar_without_a_tool_explains_what_to_install(
+    store: WorkspaceStore, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def no_tool(_: Path | None) -> None:
+        raise UnsupportedFileError("Não foi possível abrir o RAR neste computador")
+
+    monkeypatch.setattr(workspace_store, "_configure_rar_tool", no_tool)
+
+    with pytest.raises(UnsupportedFileError, match="abrir o RAR"), RAR_FIXTURE.open("rb") as source:
+        store.save_archive(store.create(), source)
 
 
 def test_purge_removes_only_old_workspaces(store: WorkspaceStore, tmp_path: Path) -> None:

@@ -17,7 +17,7 @@ export const strings = {
   nav: { back: "Voltar", next: "Avançar" },
   steps: {
     template: { label: "Template", description: "Modelo Excel" },
-    photos: { label: "Fotos", description: "Envio por ZIP" },
+    photos: { label: "Fotos", description: "ZIP, RAR ou pasta" },
     sections: { label: "Seções", description: "Pastas e títulos" },
     validation: { label: "Conferência", description: "Antes de gerar" },
     generate: { label: "Gerar", description: "Relatório final" },
@@ -34,9 +34,11 @@ export const strings = {
     ready: "Template recebido",
   },
   photos: {
-    drop: "Arraste o ZIP das fotos aqui ou clique para escolher",
-    hint: "O ZIP deve ter uma pasta por seção, com o mesmo nome da pasta definido em Seções (por exemplo, entorno/foto1.jpg).",
+    drop: "Arraste um ZIP, um RAR ou uma pasta de fotos aqui, ou clique para escolher o arquivo",
+    hint: "Use uma pasta por seção, com o mesmo nome da pasta definido em Seções (por exemplo, entorno/foto1.jpg).",
+    chooseFolder: "Escolher pasta...",
     uploading: "Enviando as fotos...",
+    uploadingProgress: (done: number, total: number) => `Enviando as fotos... ${done} de ${total}`,
     received: (count: number) => `${count} ${plural(count, "foto recebida", "fotos recebidas")}`,
     skipped: (count: number) =>
       `${count} ${plural(count, "arquivo ignorado", "arquivos ignorados")} (tipo não aceito ou fora de uma pasta de seção)`,
@@ -58,7 +60,8 @@ export const strings = {
     useExample: "Usar as seções do exemplo",
     clear: "Limpar seções",
     empty: "Nenhuma seção definida.",
-    titleNotFound: "Título não encontrado na coluna B do template.",
+    titleNotFound:
+      "Título não encontrado na coluna B do template. Escolha um título da lista ou troque de template.",
     titleDuplicated: (count: number) =>
       `O título aparece ${count} vezes no template; será usada a primeira.`,
     titleOk: "Título encontrado no template",

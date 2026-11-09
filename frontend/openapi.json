@@ -1,7 +1,29 @@
 {
   "components": {
     "schemas": {
-      "Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post": {
+      "ArchiveOut": {
+        "description": "Resultado do envio de um ZIP, RAR ou pasta: fotos por seção e arquivos ignorados.",
+        "properties": {
+          "sections": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Sections",
+            "type": "object"
+          },
+          "skipped": {
+            "title": "Skipped",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sections",
+          "skipped"
+        ],
+        "title": "ArchiveOut",
+        "type": "object"
+      },
+      "Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post": {
         "properties": {
           "file": {
             "contentMediaType": "application/octet-stream",
@@ -12,7 +34,32 @@
         "required": [
           "file"
         ],
-        "title": "Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post",
+        "title": "Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post",
+        "type": "object"
+      },
+      "Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "contentMediaType": "application/octet-stream",
+              "type": "string"
+            },
+            "title": "Files",
+            "type": "array"
+          },
+          "paths": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Paths",
+            "type": "array"
+          }
+        },
+        "required": [
+          "files",
+          "paths"
+        ],
+        "title": "Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post",
         "type": "object"
       },
       "Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post": {
@@ -574,28 +621,6 @@
         ],
         "title": "WorkspaceOut",
         "type": "object"
-      },
-      "ZipOut": {
-        "description": "Resultado do envio de um ZIP: fotos por seção e arquivos ignorados.",
-        "properties": {
-          "sections": {
-            "additionalProperties": {
-              "type": "integer"
-            },
-            "title": "Sections",
-            "type": "object"
-          },
-          "skipped": {
-            "title": "Skipped",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "sections",
-          "skipped"
-        ],
-        "title": "ZipOut",
-        "type": "object"
       }
     }
   },
@@ -1142,10 +1167,10 @@
         "summary": "Photo Counts"
       }
     },
-    "/api/workspaces/{workspace_id}/photos/zip": {
+    "/api/workspaces/{workspace_id}/photos/archive": {
       "post": {
-        "description": "Envia um ZIP com uma pasta por seção (nome da pasta = identificador da seção).",
-        "operationId": "upload_photos_zip_api_workspaces__workspace_id__photos_zip_post",
+        "description": "Envia um ZIP ou RAR com uma pasta por seção (nome da pasta = identificador da seção).",
+        "operationId": "upload_photos_archive_api_workspaces__workspace_id__photos_archive_post",
         "parameters": [
           {
             "in": "path",
@@ -1161,7 +1186,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post"
+                "$ref": "#/components/schemas/Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post"
               }
             }
           },
@@ -1172,7 +1197,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ZipOut"
+                  "$ref": "#/components/schemas/ArchiveOut"
                 }
               }
             },
@@ -1229,7 +1254,97 @@
             "description": "Unprocessable Entity"
           }
         },
-        "summary": "Upload Photos Zip"
+        "summary": "Upload Photos Archive"
+      }
+    },
+    "/api/workspaces/{workspace_id}/photos/folder": {
+      "post": {
+        "description": "Envia (um lote de) arquivos de uma pasta; `paths[i]` é o caminho relativo de `files[i]`.",
+        "operationId": "upload_photos_folder_api_workspaces__workspace_id__photos_folder_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Upload Photos Folder"
       }
     },
     "/api/workspaces/{workspace_id}/photos/{section_id}": {

@@ -124,6 +124,25 @@ def test_overflow_into_the_next_section_is_an_error() -> None:
         ("section_overflow", IssueSeverity.ERROR, "a")
     ]
     assert "começa na linha 30" in issues[0].message
+    assert "cabem 3 fotos" in issues[0].message
+    assert 'reduza o "Máximo de fotos" para 3' in issues[0].message
+
+
+def test_overflow_message_says_when_not_even_one_photo_fits() -> None:
+    config = parse_report_config(
+        {
+            "sections": [
+                {"id": "a", "label": "A", "max_photos": 3},
+                {"id": "b", "label": "B", "max_photos": 1},
+            ]
+        }
+    )
+    anchors = {"a": 10, "b": 14}
+    plan = plan_layout(config, anchors, {"a": 3, "b": 1})
+
+    issues = find_overflows(config, plan, anchors)
+
+    assert "não cabe nenhuma foto" in issues[0].message
 
 
 def test_going_past_the_end_of_the_template_is_only_a_warning() -> None:

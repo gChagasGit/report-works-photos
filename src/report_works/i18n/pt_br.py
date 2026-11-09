@@ -24,7 +24,10 @@ ERR_TEMPLATE_UNREADABLE = "Não foi possível ler o template Excel: {detail}"
 
 # --- Problemas encontrados na validação prévia -------------------------------
 ISSUE_SHEET_NOT_FOUND = 'A aba "{sheet}" não existe no template; será usada a aba "{used}".'
-ISSUE_LABEL_NOT_FOUND = 'O título "{label}" não foi encontrado na coluna B da aba "{sheet}".'
+ISSUE_LABEL_NOT_FOUND = (
+    'O título "{label}" não foi encontrado na coluna B da aba "{sheet}" do template enviado. '
+    "Escolha outro título da lista ou envie um template que o contenha."
+)
 ISSUE_LABEL_DUPLICATED = (
     'O título "{label}" aparece {count} vezes (linhas {rows}); será usada a linha {first}.'
 )
@@ -44,8 +47,16 @@ ERR_EXCEL_UNAVAILABLE = (
 )
 ERR_WRITER_NOT_OPEN = "O template não foi aberto."
 ISSUE_SECTION_OVERFLOW = (
-    'A seção "{label}" ocupa até a linha {last}, mas a seção seguinte começa na linha {next}.'
+    'A seção "{label}" ocupa até a linha {last}, mas a seção seguinte começa na linha {next}. '
+    'Neste template {fit_text} nela: reduza o "Máximo de fotos" para {fit} '
+    "ou use um template com mais linhas."
 )
+ISSUE_SECTION_NO_ROOM = (
+    'A seção "{label}" ocupa até a linha {last}, mas a seção seguinte começa na linha {next}. '
+    "Neste template não cabe nenhuma foto nela: use um template com mais linhas entre os títulos."
+)
+ISSUE_FIT_ONE = "cabe 1 foto"
+ISSUE_FIT_MANY = "cabem {fit} fotos"
 ISSUE_BEYOND_TEMPLATE = (
     'A seção "{label}" ocupa até a linha {last}, além do fim do template (linha {template_last}).'
 )
@@ -64,8 +75,13 @@ ERR_JOB_NOT_READY = "O relatório ainda não está pronto."
 ERR_TEMPLATE_NOT_UPLOADED = "Envie o template Excel antes de continuar."
 ERR_UPLOAD_TOO_LARGE = "O envio excede o limite de {limit_mb} MB."
 ERR_UPLOAD_EXTENSION = "Tipo de arquivo não permitido: {name}"
-ERR_ZIP_INVALID = "O arquivo ZIP é inválido."
-ERR_ZIP_UNSAFE = "O ZIP contém um caminho inseguro: {name}"
+ERR_ARCHIVE_INVALID = "O arquivo enviado não é um ZIP ou RAR válido."
+ERR_ARCHIVE_UNSAFE = "O arquivo compactado contém um caminho inseguro: {name}"
+ERR_RAR_TOOL_MISSING = (
+    "Não foi possível abrir o RAR neste computador: instale o WinRAR ou o 7-Zip "
+    "(ou informe REPORT_RAR_TOOL) ou envie o arquivo como ZIP."
+)
+ERR_FOLDER_PATHS_MISMATCH = "Cada arquivo da pasta precisa de um caminho relativo."
 ERR_SECTION_ID_INVALID = "Identificador de seção inválido: {value}"
 ERR_SETTING_INVALID = "Valor inválido para {name}: {value}"
 

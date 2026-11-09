@@ -5,10 +5,11 @@ from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Annotated, cast
 
-from fastapi import APIRouter, File, Query, Request, UploadFile
+from fastapi import APIRouter, File, Form, Query, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
 from report_works.api.schemas import (
+    ArchiveOut,
     ErrorOut,
     IssueOut,
     JobOut,
@@ -18,11 +19,10 @@ from report_works.api.schemas import (
     UploadOut,
     ValidationOut,
     WorkspaceOut,
-    ZipOut,
 )
 from report_works.api.services import Services
 from report_works.domain import ReportConfig
-from report_works.domain.errors import ReportError, TemplateError
+from report_works.domain.errors import ReportError, TemplateError, UnsupportedFileError
 from report_works.i18n import pt_br
 from report_works.services.preflight import run_preflight
 from report_works.services.template_inspector import inspect_template
@@ -96,13 +96,29 @@ def get_template(
     return TemplateSummary.from_info(inspect_template(path, target_sheet))
 
 
-@router.post("/workspaces/{workspace_id}/photos/zip")
-def upload_photos_zip(
+@router.post("/workspaces/{workspace_id}/photos/archive")
+def upload_photos_archive(
     request: Request, workspace_id: str, file: Annotated[UploadFile, File()]
-) -> ZipOut:
-    """Envia um ZIP com uma pasta por seção (nome da pasta = identificador da seção)."""
-    sections, skipped = _services(request).store.save_zip(workspace_id, file.file)
-    return ZipOut(sections=sections, skipped=skipped)
+) -> ArchiveOut:
+    """Envia um ZIP ou RAR com uma pasta por seção (nome da pasta = identificador da seção)."""
+    sections, skipped = _services(request).store.save_archive(workspace_id, file.file)
+    return ArchiveOut(sections=sections, skipped=skipped)
+
+
+@router.post("/workspaces/{workspace_id}/photos/folder")
+def upload_photos_folder(
+    request: Request,
+    workspace_id: str,
+    files: Annotated[list[UploadFile], File()],
+    paths: Annotated[list[str], Form()],
+) -> ArchiveOut:
+    """Envia (um lote de) arquivos de uma pasta; `paths[i]` é o caminho relativo de `files[i]`."""
+    if len(files) != len(paths):
+        raise UnsupportedFileError(pt_br.ERR_FOLDER_PATHS_MISMATCH)
+    sections, skipped = _services(request).store.save_folder(
+        workspace_id, [(path, file.file) for path, file in zip(paths, files, strict=True)]
+    )
+    return ArchiveOut(sections=sections, skipped=skipped)
 
 
 @router.post("/workspaces/{workspace_id}/photos/{section_id}")

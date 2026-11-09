@@ -144,7 +144,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/workspaces/{workspace_id}/photos/zip": {
+    "/api/workspaces/{workspace_id}/photos/archive": {
         parameters: {
             query?: never;
             header?: never;
@@ -154,10 +154,30 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Upload Photos Zip
-         * @description Envia um ZIP com uma pasta por seção (nome da pasta = identificador da seção).
+         * Upload Photos Archive
+         * @description Envia um ZIP ou RAR com uma pasta por seção (nome da pasta = identificador da seção).
          */
-        post: operations["upload_photos_zip_api_workspaces__workspace_id__photos_zip_post"];
+        post: operations["upload_photos_archive_api_workspaces__workspace_id__photos_archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workspaces/{workspace_id}/photos/folder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Photos Folder
+         * @description Envia (um lote de) arquivos de uma pasta; `paths[i]` é o caminho relativo de `files[i]`.
+         */
+        post: operations["upload_photos_folder_api_workspaces__workspace_id__photos_folder_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -232,10 +252,29 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post */
-        Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post: {
+        /**
+         * ArchiveOut
+         * @description Resultado do envio de um ZIP, RAR ou pasta: fotos por seção e arquivos ignorados.
+         */
+        ArchiveOut: {
+            /** Sections */
+            sections: {
+                [key: string]: number;
+            };
+            /** Skipped */
+            skipped: number;
+        };
+        /** Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post */
+        Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post: {
             /** File */
             file: string;
+        };
+        /** Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post */
+        Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post: {
+            /** Files */
+            files: string[];
+            /** Paths */
+            paths: string[];
         };
         /** Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post */
         Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post: {
@@ -504,18 +543,6 @@ export interface components {
         WorkspaceOut: {
             /** Id */
             id: string;
-        };
-        /**
-         * ZipOut
-         * @description Resultado do envio de um ZIP: fotos por seção e arquivos ignorados.
-         */
-        ZipOut: {
-            /** Sections */
-            sections: {
-                [key: string]: number;
-            };
-            /** Skipped */
-            skipped: number;
         };
     };
     responses: never;
@@ -995,7 +1022,7 @@ export interface operations {
             };
         };
     };
-    upload_photos_zip_api_workspaces__workspace_id__photos_zip_post: {
+    upload_photos_archive_api_workspaces__workspace_id__photos_archive_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1006,7 +1033,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post"];
+                "multipart/form-data": components["schemas"]["Body_upload_photos_archive_api_workspaces__workspace_id__photos_archive_post"];
             };
         };
         responses: {
@@ -1016,7 +1043,78 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZipOut"];
+                    "application/json": components["schemas"]["ArchiveOut"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    upload_photos_folder_api_workspaces__workspace_id__photos_folder_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_photos_folder_api_workspaces__workspace_id__photos_folder_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArchiveOut"];
                 };
             };
             /** @description Bad Request */

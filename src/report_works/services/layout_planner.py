@@ -93,6 +93,23 @@ def plan_layout(
     return LayoutPlan(slots=tuple(slots))
 
 
+def _photos_that_fit(
+    section: SectionConfig, layout: LayoutSettings, anchor_row: int, next_anchor: int
+) -> int:
+    """Quantas fotos da seção cabem acima do título seguinte (sem invadi-lo)."""
+    slots = plan_section(section, layout, anchor_row, section.slot_capacity)
+    return sum(1 for slot in slots if slot.last_row < next_anchor)
+
+
+def _overflow_message(label: str, last: int, next_row: int, fit: int) -> str:
+    if fit == 0:
+        return pt_br.ISSUE_SECTION_NO_ROOM.format(label=label, last=last, next=next_row)
+    fit_text = pt_br.ISSUE_FIT_ONE if fit == 1 else pt_br.ISSUE_FIT_MANY.format(fit=fit)
+    return pt_br.ISSUE_SECTION_OVERFLOW.format(
+        label=label, last=last, next=next_row, fit=fit, fit_text=fit_text
+    )
+
+
 def find_overflows(
     config: ReportConfig,
     plan: LayoutPlan,
@@ -108,9 +125,8 @@ def find_overflows(
         last = max(slot.last_row for slot in slots)
         later = sorted(row for row in anchors.values() if row > anchors[section.id])
         if later and last >= later[0]:
-            message = pt_br.ISSUE_SECTION_OVERFLOW.format(
-                label=section.label, last=last, next=later[0]
-            )
+            fit = _photos_that_fit(section, config.layout, anchors[section.id], later[0])
+            message = _overflow_message(section.label, last, later[0], fit)
             issues.append(
                 ValidationIssue("section_overflow", IssueSeverity.ERROR, message, section.id)
             )

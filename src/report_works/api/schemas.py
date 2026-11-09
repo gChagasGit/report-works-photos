@@ -48,8 +48,8 @@ class UploadOut(BaseModel):
     skipped: int
 
 
-class ZipOut(BaseModel):
-    """Resultado do envio de um ZIP: fotos por seção e arquivos ignorados."""
+class ArchiveOut(BaseModel):
+    """Resultado do envio de um ZIP, RAR ou pasta: fotos por seção e arquivos ignorados."""
 
     sections: dict[str, int]
     skipped: int

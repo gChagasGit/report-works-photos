@@ -73,7 +73,7 @@ def create_app(
 ) -> FastAPI:
     """Monta a aplicação. `writer_factory` permite trocar o Excel por um escritor de teste."""
     settings = settings or Settings.from_env(detect_static=True)
-    store = WorkspaceStore(settings.workdir, settings.max_upload_bytes)
+    store = WorkspaceStore(settings.workdir, settings.max_upload_bytes, settings.rar_tool)
     store.purge_older_than(settings.retention_hours)
     runner = JobRunner(ReportBuilder(writer_factory or default_writer_factory), store)
 

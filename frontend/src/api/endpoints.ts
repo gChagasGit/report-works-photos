@@ -1,5 +1,6 @@
 import type { components } from "./schema";
 import { requestJson } from "./client";
+import type { FolderFile } from "../domain/photos";
 
 type Schemas = components["schemas"];
 
@@ -7,7 +8,7 @@ export type TemplateSummary = Schemas["TemplateSummary"];
 export type ValidationOut = Schemas["ValidationOut"];
 export type IssueOut = Schemas["IssueOut"];
 export type JobOut = Schemas["JobOut"];
-export type ZipOut = Schemas["ZipOut"];
+export type ArchiveOut = Schemas["ArchiveOut"];
 export type UploadOut = Schemas["UploadOut"];
 export type ReportConfig = Schemas["ReportConfig"];
 
@@ -39,8 +40,39 @@ export const getTemplate = (workspaceId: string, targetSheet: string | null) => 
   return requestJson<TemplateSummary>(`/api/workspaces/${workspaceId}/template${query}`);
 };
 
-export const uploadPhotosZip = (workspaceId: string, file: File) =>
-  requestJson<ZipOut>(`/api/workspaces/${workspaceId}/photos/zip`, upload("POST", file, "file"));
+export const uploadPhotosArchive = (workspaceId: string, file: File) =>
+  requestJson<ArchiveOut>(
+    `/api/workspaces/${workspaceId}/photos/archive`,
+    upload("POST", file, "file"),
+  );
+
+// O servidor aceita no máximo 1000 arquivos por requisição; a pasta vai em lotes menores.
+export const FOLDER_BATCH_SIZE = 200;
+
+export async function uploadPhotosFolder(
+  workspaceId: string,
+  entries: FolderFile[],
+  onProgress?: (done: number, total: number) => void,
+): Promise<ArchiveOut> {
+  const total: ArchiveOut = { sections: {}, skipped: 0 };
+  for (let start = 0; start < entries.length; start += FOLDER_BATCH_SIZE) {
+    const form = new FormData();
+    for (const { file, path } of entries.slice(start, start + FOLDER_BATCH_SIZE)) {
+      form.append("files", file);
+      form.append("paths", path);
+    }
+    const batch = await requestJson<ArchiveOut>(`/api/workspaces/${workspaceId}/photos/folder`, {
+      method: "POST",
+      body: form,
+    });
+    for (const [section, count] of Object.entries(batch.sections)) {
+      total.sections[section] = (total.sections[section] ?? 0) + count;
+    }
+    total.skipped += batch.skipped;
+    onProgress?.(Math.min(start + FOLDER_BATCH_SIZE, entries.length), entries.length);
+  }
+  return total;
+}
 
 export const uploadSectionPhotos = (workspaceId: string, sectionId: string, files: File[]) =>
   requestJson<UploadOut>(

@@ -534,6 +534,15 @@ wheels = [
 ]
 
 [[package]]
+name = "rarfile"
+version = "4.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b2/eb/33ea5625de4e84144069ea021a282ea3c44ff7bd341b740bcadff028bea7/rarfile-4.5.tar.gz", hash = "sha256:7425d0afa180f0092db903abb1526a130b36858980aad90b3694f48e41420155", size = 155541, upload-time = "2026-08-02T20:45:53.221Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/36/ffd87452bf72310dfd1185ade33e5b8be374ab370d19573a8197ca25c95b/rarfile-4.5-py3-none-any.whl", hash = "sha256:c74341f4b9a3a3ebb35ef396d59daf059eb028f34995a7162950a41d97b84de9", size = 30035, upload-time = "2026-08-02T20:45:52.212Z" },
+]
+
+[[package]]
 name = "report-works"
 version = "0.1.0"
 source = { editable = "." }
@@ -545,6 +554,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-multipart" },
     { name = "pyyaml" },
+    { name = "rarfile" },
     { name = "uvicorn" },
     { name = "xlwings", marker = "sys_platform == 'win32'" },
 ]
@@ -569,6 +579,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.8" },
     { name = "python-multipart", specifier = ">=0.0.33" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "rarfile", specifier = ">=4.5" },
     { name = "uvicorn", specifier = ">=0.30" },
     { name = "xlwings", marker = "sys_platform == 'win32'", specifier = ">=0.33" },
 ]

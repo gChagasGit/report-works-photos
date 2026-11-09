@@ -161,13 +161,41 @@ def test_photo_uploads_by_section_and_by_zip(client: TestClient) -> None:
     archive.seek(0)
 
     zipped = client.post(
-        f"/api/workspaces/{workspace}/photos/zip",
+        f"/api/workspaces/{workspace}/photos/archive",
         files={"file": ("f.zip", archive, "application/zip")},
     )
 
     assert zipped.json() == {"sections": {"geral_obra": 1}, "skipped": 1}
     counts = client.get(f"/api/workspaces/{workspace}/photos").json()
     assert counts == {"sections": {"entorno": 2, "geral_obra": 1}}
+
+
+def test_photo_folder_upload_uses_relative_paths(client: TestClient) -> None:
+    workspace = _workspace(client)
+
+    response = client.post(
+        f"/api/workspaces/{workspace}/photos/folder",
+        files=[
+            ("files", ("a.png", _png(), "image/png")),
+            ("files", ("b.png", _png(), "image/png")),
+            ("files", ("leia.txt", b"x", "text/plain")),
+        ],
+        data={"paths": ["obra/entorno/a.png", "obra/geral_obra/b.png", "obra/entorno/leia.txt"]},
+    )
+
+    assert response.json() == {"sections": {"entorno": 1, "geral_obra": 1}, "skipped": 1}
+
+
+def test_photo_folder_upload_needs_one_path_per_file(client: TestClient) -> None:
+    workspace = _workspace(client)
+
+    response = client.post(
+        f"/api/workspaces/{workspace}/photos/folder",
+        files=[("files", ("a.png", _png(), "image/png"))],
+        data={"paths": ["a/b.png", "a/c.png"]},
+    )
+
+    assert response.status_code == 400
 
 
 def test_unsafe_zip_and_section_id_are_rejected(client: TestClient) -> None:
@@ -178,7 +206,7 @@ def test_unsafe_zip_and_section_id_are_rejected(client: TestClient) -> None:
     archive.seek(0)
 
     zipped = client.post(
-        f"/api/workspaces/{workspace}/photos/zip",
+        f"/api/workspaces/{workspace}/photos/archive",
         files={"file": ("f.zip", archive, "application/zip")},
     )
     bad_section = client.post(

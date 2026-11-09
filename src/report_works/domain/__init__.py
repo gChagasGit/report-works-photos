@@ -2,6 +2,7 @@
 
 from report_works.domain.errors import ConfigError, ReportError
 from report_works.domain.models import (
+    ImageMode,
     LayoutSettings,
     PathsConfig,
     ProjectMetadata,
@@ -14,6 +15,7 @@ from report_works.domain.validation import describe_validation_errors
 
 __all__ = [
     "ConfigError",
+    "ImageMode",
     "LayoutSettings",
     "PathsConfig",
     "ProjectMetadata",

@@ -7,6 +7,14 @@ node = "22"
 description = "Sobe a API (http://127.0.0.1:8000); o frontend roda em outro terminal com `mise run dev-web`"
 run = "uv run python -m report_works"
 
+[tasks.start]
+description = "Compila a interface (se preciso) e sobe tudo em uma única URL, abrindo o navegador"
+depends = ["install"]
+run = [
+  "npm --prefix frontend run build",
+  "uv run python -m report_works --open",
+]
+
 [tasks.dev-web]
 description = "Sobe o frontend com recarga automática (http://localhost:5173, encaminha /api para a API)"
 dir = "frontend"

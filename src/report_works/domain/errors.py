@@ -17,6 +17,18 @@ class TemplateError(ReportError):
     """O template Excel não pôde ser lido."""
 
 
+class LayoutError(ReportError):
+    """Não foi possível calcular a posição das fotos (por exemplo, seção sem título)."""
+
+
+class PhotoInsertError(ReportError):
+    """Uma foto não pôde ser inserida na planilha."""
+
+
+class ExcelUnavailableError(ReportError):
+    """A automação do Excel não está disponível (exige Windows com Excel instalado)."""
+
+
 class ConfigError(ReportError):
     """A configuração do relatório é inválida; `messages` lista cada problema."""
 

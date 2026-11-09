@@ -39,6 +39,7 @@ class TemplateInfo:
     sheet_name: str
     target_found: bool
     titles: tuple[TitleCell, ...]
+    max_row: int = 0  # última linha com conteúdo na aba (0 se desconhecida)
 
     def rows_for(self, label: str) -> list[int]:
         """Linhas (em ordem) cujo texto equivale a `label`."""
@@ -63,7 +64,9 @@ def inspect_template(
         sheet_name = target_sheet if target_sheet and target_found else sheets[0]
         column = column_index_from_string(title_column)
         titles: list[TitleCell] = []
-        for row in workbook[sheet_name].iter_rows(min_col=column, max_col=column, max_row=max_rows):
+        sheet = workbook[sheet_name]
+        last_row = sheet.max_row or 0
+        for row in sheet.iter_rows(min_col=column, max_col=column, max_row=max_rows):
             cell = row[0]
             value = cell.value
             if isinstance(value, str) and value.strip():
@@ -75,4 +78,5 @@ def inspect_template(
         sheet_name=sheet_name,
         target_found=target_found or target_sheet is None,
         titles=tuple(titles),
+        max_row=last_row,
     )

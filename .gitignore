@@ -84,3 +84,6 @@ desktop.ini
 .vscode/
 .idea/
 .claude/settings.local.json
+
+# Worktrees temporários de agentes
+.claude/worktrees/

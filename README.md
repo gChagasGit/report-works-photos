@@ -13,7 +13,8 @@ No âmbito da engenharia do **CESIN (Central de Serviços Imobiliários)**, o re
 Para que o gerador funcione corretamente, você precisa garantir que possui:
 
 *   **uv**: gerenciador de Python e dependências ([instruções](https://docs.astral.sh/uv/)). Ele instala o Python 3.12 sozinho; não é preciso instalar o Python à parte.
-*   **Microsoft Excel**: Instalado localmente (necessário para a automação via `xlwings`).
+*   **Microsoft Excel** (Microsoft 365), instalado localmente: o relatório é montado pelo Excel (recurso "Colocar na Célula"). Ver `docs/spikes/place-in-cell.md`.
+*   **Node.js 20 ou superior**, apenas na primeira execução, para compilar a interface (`frontend/dist`).
 
 ---
 
@@ -24,20 +25,19 @@ Para que o gerador funcione corretamente, você precisa garantir que possui:
     *   *Ou* clone o repositório via terminal: `git clone https://github.com/gChagasGit/report-works-photos.git`
 
 2.  **Inicie a Aplicação**:
-    *   Navegue até a pasta do projeto e localize o arquivo **`INICIAR_APP.bat`**.
-    *   Clique duas vezes para executá-lo. 
-    *   **Na primeira execução**: O script executa `uv sync`, que cria o ambiente virtual (`.venv`) e instala as dependências do `pyproject.toml`/`uv.lock`. Isso pode levar alguns minutos.
+    *   Clique duas vezes em **`INICIAR_APP.bat`** (ou rode `uv run python -m report_works --open`).
+    *   **Na primeira execução**: `uv sync` instala as dependências e a interface é compilada (`npm ci` e `npm run build`). Isso pode levar alguns minutos; nas próximas vezes o início é imediato.
 
-3.  **Acesse a API** (a nova interface web ainda está em construção):
-    *   O servidor local inicia em `http://127.0.0.1:8000`; a documentação interativa fica em `http://127.0.0.1:8000/docs`.
-    *   A interface Streamlit antiga continua disponível com `uv run streamlit run app.py` (`http://localhost:8501`) até ser substituída.
+3.  **Use a interface**:
+    *   O navegador abre em `http://127.0.0.1:8000` (se não abrir, digite o endereço). A interface e a API ficam na mesma URL; a documentação interativa da API fica em `/docs`.
+    *   A interface Streamlit antiga (`uv run streamlit run app.py`, `http://localhost:8501`) ainda existe, mas será removida (ver `docs/migration-cleanup.md`).
 
 4.  **Encerrar**:
     *   Para desligar o servidor, volte ao terminal (tela preta) e pressione **CTRL+C**.
 
-### Nova API (em construção)
+### API e configuração
 
-O novo servidor FastAPI substituirá o Streamlit. Para subir: `uv run python -m report_works` (documentação interativa em `http://127.0.0.1:8000/docs`). Ele usa o Excel instalado (modo "Colocar na Célula") e gera o relatório em segundo plano.
+O servidor FastAPI substitui o Streamlit. Para subir: `uv run python -m report_works` (`--open` abre o navegador; a interface compilada em `frontend/dist` é servida em `/` automaticamente). Ele usa o Excel instalado (modo "Colocar na Célula") e gera o relatório em segundo plano.
 
 Configuração por variáveis de ambiente (nada de `.bat` ou edição de arquivos):
 
@@ -52,9 +52,9 @@ Configuração por variáveis de ambiente (nada de `.bat` ou edição de arquivo
 
 Fluxo da API: `POST /api/workspaces` → `PUT .../template` (envia o `.xlsx` e recebe abas e títulos) → `POST .../photos/zip` (uma pasta por seção; o nome da pasta é o `id`, em minúsculas) ou `POST .../photos/{id}` → `POST .../validate` (títulos, pastas, contagens e espaço no layout, em português) → `POST /api/jobs` → `GET /api/jobs/{id}/events` (andamento em tempo real) → `GET /api/jobs/{id}/download`. A seção em `config_exemple.yaml` pode ser enviada como corpo da validação e da geração (sem `paths`). O modo `image_mode: in_cell` (padrão) coloca cada foto dentro da célula, já enquadrada na proporção do bloco (ver `docs/spikes/place-in-cell.md`).
 
-### Nova interface web (em construção)
+### Interface web
 
-A interface em `frontend/` (React + TypeScript + Mantine) substituirá o Streamlit. Em desenvolvimento, use dois terminais: `mise run dev` (ou `uv run python -m report_works`) para a API e `mise run dev-web` (ou `npm --prefix frontend run dev`) para a interface em `http://localhost:5173`. Sem `mise`: `uv sync` e `npm --prefix frontend ci` preparam as dependências.
+A interface em `frontend/` (React + TypeScript + Mantine) substitui o Streamlit. Em desenvolvimento, use dois terminais: `mise run dev` (ou `uv run python -m report_works`) para a API e `mise run dev-web` (ou `npm --prefix frontend run dev`) para a interface em `http://localhost:5173`. Sem `mise`: `uv sync` e `npm --prefix frontend ci` preparam as dependências.
 
 O fluxo é guiado em cinco passos, sem diálogos do sistema operacional:
 

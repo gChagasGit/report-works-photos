@@ -12,7 +12,7 @@ No âmbito da engenharia do **CESIN (Central de Serviços Imobiliários)**, o re
 
 Para que o gerador funcione corretamente, você precisa garantir que possui:
 
-*   **Python 3.12**: [Baixe aqui](https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe) ou instale via Microsoft Store.
+*   **uv**: gerenciador de Python e dependências ([instruções](https://docs.astral.sh/uv/)). Ele instala o Python 3.12 sozinho; não é preciso instalar o Python à parte.
 *   **Microsoft Excel**: Instalado localmente (necessário para a automação via `xlwings`).
 
 ---
@@ -26,15 +26,20 @@ Para que o gerador funcione corretamente, você precisa garantir que possui:
 2.  **Inicie a Aplicação**:
     *   Navegue até a pasta do projeto e localize o arquivo **`INICIAR_APP.bat`**.
     *   Clique duas vezes para executá-lo. 
-    *   **Na primeira execução**: O script criará automaticamente o ambiente virtual (`.venv`) e instalará todas as dependências necessárias (via `requirements.txt`). Isso pode levar alguns minutos.
+    *   **Na primeira execução**: O script executa `uv sync`, que cria o ambiente virtual (`.venv`) e instala as dependências do `pyproject.toml`/`uv.lock`. Isso pode levar alguns minutos.
 
-3.  **Acesse a Interface**:
-    *   Após a instalação, o servidor local será iniciado.
-    *   O navegador abrirá automaticamente no endereço `http://localhost:8501`.
-    *   *Nota: Caso o navegador não abra, copie e cole o link apresentado na tela do terminal.*
+3.  **Acesse a API** (a nova interface web ainda está em construção):
+    *   O servidor local inicia em `http://127.0.0.1:8000`; a documentação interativa fica em `http://127.0.0.1:8000/docs`.
+    *   A interface Streamlit antiga continua disponível com `uv run streamlit run app.py` (`http://localhost:8501`) até ser substituída.
 
 4.  **Encerrar**:
     *   Para desligar o servidor, volte ao terminal (tela preta) e pressione **CTRL+C**.
+
+### Comandos de desenvolvimento
+
+*   Testes: `uv run pytest`
+*   Lint, formatação e tipos: `uv run ruff check .`, `uv run ruff format --check .`, `uv run pyright`
+*   O arquivo `mise.toml` define as mesmas tarefas (`mise run test`, `mise run lint`, ...) para quem usa o [mise](https://mise.jdx.dev/).
 
 ---
 

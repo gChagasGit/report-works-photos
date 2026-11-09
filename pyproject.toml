@@ -1,0 +1,65 @@
+[project]
+name = "report-works"
+version = "0.1.0"
+description = "Gerador de relatórios fotográficos de obras a partir de templates Excel."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "pydantic>=2.8",
+    "pyyaml>=6.0",
+    "pillow>=10.0",
+    "openpyxl>=3.1",
+    # Motor inicial: automação do Excel via COM (somente Windows com Excel instalado).
+    "xlwings>=0.33; sys_platform == 'win32'",
+    "defusedxml>=0.7.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-mock>=3.12",
+    "ruff>=0.6",
+    "pyright>=1.1.380",
+    "types-defusedxml>=0.7.0.20260504",
+]
+# Interface Streamlit antiga; sai junto com app.py na etapa de limpeza.
+legacy = ["streamlit>=1.40"]
+
+[tool.uv]
+default-groups = ["dev", "legacy"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/report_works"]
+
+[tool.pytest.ini_options]
+# "." permite importar o código legado (scripts/) enquanto ele não é portado para src/.
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+# Código legado: entra no lint quando for portado para src/ (ver PLAN.md).
+extend-exclude = ["app.py", "main.py", "scripts", "test"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "C4", "RUF", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.12"
+# Strict só no código novo; os testes chamam o código legado (sem tipos) até ele ser portado.
+typeCheckingMode = "standard"
+strict = ["src"]
+reportMissingTypeStubs = false

@@ -32,6 +32,13 @@ config.yaml
 .env.*
 !.env.example
 
+# Restos da tentativa anterior de frontend (será recriado em frontend/)
+/package.json
+/package-lock.json
+/__init__.py
+CRIAR_FRONTEND.bat
+COPIAR_PROJETO.bat
+
 # Marcador local do ai-memory (escolha de captura de cada máquina)
 .ai-memory.toml
 

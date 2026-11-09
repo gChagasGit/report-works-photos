@@ -1,0 +1,25 @@
+# ESBOÇO INATIVO: não foi executado (não há Docker nesta máquina). Ver docs/docker/README.md.
+# Uso futuro, a partir da raiz do repositório:
+#   docker compose -f docs/docker/compose.sketch.yaml up --build
+# e abrir http://127.0.0.1:8000
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: docs/docker/Dockerfile.sketch
+    ports:
+      - "127.0.0.1:8000:8000" # só a própria máquina; troque para expor na rede
+    environment:
+      REPORT_WORKDIR: /data
+      REPORT_MAX_UPLOAD_MB: "2048"
+      REPORT_RETENTION_HOURS: "24"
+      CORS_ORIGINS: "" # a interface é servida pela própria API, sem CORS
+    volumes:
+      - report_data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+
+volumes:
+  report_data:

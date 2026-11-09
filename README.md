@@ -30,14 +30,13 @@ Para que o gerador funcione corretamente, você precisa garantir que possui:
 
 3.  **Use a interface**:
     *   O navegador abre em `http://127.0.0.1:8000` (se não abrir, digite o endereço). A interface e a API ficam na mesma URL; a documentação interativa da API fica em `/docs`.
-    *   A interface Streamlit antiga (`uv run streamlit run app.py`, `http://localhost:8501`) ainda existe, mas será removida (ver `docs/migration-cleanup.md`).
 
 4.  **Encerrar**:
     *   Para desligar o servidor, volte ao terminal (tela preta) e pressione **CTRL+C**.
 
 ### API e configuração
 
-O servidor FastAPI substitui o Streamlit. Para subir: `uv run python -m report_works` (`--open` abre o navegador; a interface compilada em `frontend/dist` é servida em `/` automaticamente). Ele usa o Excel instalado (modo "Colocar na Célula") e gera o relatório em segundo plano.
+Para subir só o servidor: `uv run python -m report_works` (`--open` abre o navegador; a interface compilada em `frontend/dist` é servida em `/` automaticamente). Ele usa o Excel instalado (modo "Colocar na Célula") e gera o relatório em segundo plano.
 
 Configuração por variáveis de ambiente (nada de `.bat` ou edição de arquivos):
 
@@ -54,7 +53,7 @@ Fluxo da API: `POST /api/workspaces` → `PUT .../template` (envia o `.xlsx` e r
 
 ### Interface web
 
-A interface em `frontend/` (React + TypeScript + Mantine) substitui o Streamlit. Em desenvolvimento, use dois terminais: `mise run dev` (ou `uv run python -m report_works`) para a API e `mise run dev-web` (ou `npm --prefix frontend run dev`) para a interface em `http://localhost:5173`. Sem `mise`: `uv sync` e `npm --prefix frontend ci` preparam as dependências.
+A interface fica em `frontend/` (React + TypeScript + Mantine). Em desenvolvimento, use dois terminais: `mise run dev` (ou `uv run python -m report_works`) para a API e `mise run dev-web` (ou `npm --prefix frontend run dev`) para a interface em `http://localhost:5173`. Sem `mise`: `uv sync` e `npm --prefix frontend ci` preparam as dependências.
 
 O fluxo é guiado em cinco passos, sem diálogos do sistema operacional:
 
@@ -78,49 +77,15 @@ Em `docs/docker/` há o esboço de `Dockerfile` e `compose.yaml` para rodar em c
 
 ---
 
-## Como Usar a Interface (Streamlit)
-
-A interface foi projetada para ser intuitiva. Siga os passos abaixo:
-
-1.  **Configuração de Caminhos**:
-    *   **Template Excel**: Selecione o arquivo `.xlsx` que servirá de modelo (deve conter os títulos das seções previamente escritos).
-    *   **Pasta Raiz das Imagens**: Selecione a pasta principal que contém as subpastas das imagens organizadas por seção.
-
-2.  **Definição de Seções**:
-    *   Se for sua primeira vez, você pode usar as configurações sugeridas ou adicionar novas clicando em **"Adicionar Nova Seção"**.
-    *   **Nome da Pasta**: Deve ser o nome exato da subpasta onde estão as fotos.
-    *   **Título no Excel**: Deve ser exatamente igual ao texto escrito na célula do Excel onde a seção começa.
-    *   **Máx. de Fotos**: Limite de imagens para aquela seção.
-    *   **Fixar Largura?**: Se marcado, a imagem será redimensionada para ocupar toda a largura da célula.
-    *   **Pavimentos (Especial)**: Se a seção for de pavimentos, insira a distribuição (ex: `4, 6, 2`) para indicar quantas fotos cada andar possui.
-
-3.  **Gerar Relatório**:
-    *   Clique no botão **"GERAR RELATÓRIO"**. 
-    *   O sistema salvará suas preferências no arquivo `config.yaml` (sobrescrevendo-o para usos futuros).
-    *   O Excel será aberto e você poderá acompanhar a inserção em tempo real através da **barra de progresso** na interface.
-
----
-
-## Dica Extra: Simular "Place in Cell" (Macro)
-
-Caso o seu Excel não possua a função nativa de "Colocar na Célula" de forma satisfatória, disponibilizamos o arquivo **`macro.txt`**. 
-
-*   Copie o código contido neste arquivo.
-*   No Excel, abra o Editor do Visual Basic (ALT + F11).
-*   Insira um novo Módulo e cole o código.
-*   Isso permitirá replicar a funcionalidade de ajuste fino das imagens dentro das células.
-
----
-
 ## Estrutura de Pastas Sugerida
 
-Para um funcionamento ideal, organize suas fotos assim:
+Compacte as fotos em um ZIP com uma pasta por seção; o nome de cada pasta é o identificador da seção (minúsculas, números e `_`), definido no passo **Seções**:
 ```text
-Minha_Obra/
-├── Seção_A/
+Minha_Obra.zip
+├── entorno/
 │   ├── foto1.jpg
 │   └── foto2.jpg
-└── Seção_B/
+└── geral_obra/
     ├── foto1.jpg
     └── foto2.jpg
 ```

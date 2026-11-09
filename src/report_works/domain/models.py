@@ -24,6 +24,13 @@ class SectionKind(StrEnum):
     GROUPED = "grouped"  # grupos (por exemplo, andares), cada um iniciando um novo bloco
 
 
+class ImageMode(StrEnum):
+    """Como a foto entra na planilha."""
+
+    IN_CELL = "in_cell"  # "Colocar na Célula": a imagem vira conteúdo do bloco de células
+    FLOATING = "floating"  # imagem flutuante sobre a planilha (comportamento do fluxo antigo)
+
+
 class SortMethod(StrEnum):
     """Critério de ordenação das fotos de uma pasta."""
 
@@ -85,6 +92,8 @@ class LayoutSettings(BaseModel):
     default_min_row_height: float = Field(default=23.25, gt=0)
     fixed_width_px: PositiveInt = 390
     sort_method: SortMethod = SortMethod.DATE
+    image_mode: ImageMode = ImageMode.IN_CELL
+    max_image_px: PositiveInt = 1600  # maior lado da foto preparada (modo "na célula")
 
     @model_validator(mode="after")
     def _check_unique_columns(self) -> Self:

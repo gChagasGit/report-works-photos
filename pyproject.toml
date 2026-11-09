@@ -49,7 +49,7 @@ line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
 # Código legado: entra no lint quando for portado para src/ (ver PLAN.md).
-extend-exclude = ["app.py", "main.py", "scripts", "test"]
+extend-exclude = ["app.py", "main.py", "scripts", "test", "docs/spikes"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "C4", "RUF", "ANN"]

@@ -22,6 +22,7 @@ from report_works.domain.errors import SettingError
 from report_works.i18n import pt_br
 
 BYTES_PER_MB = 1024 * 1024
+DEFAULT_STATIC_DIR = Path("frontend") / "dist"
 
 
 def _positive_int(env: Mapping[str, str], name: str, default: int) -> int:
@@ -55,11 +56,17 @@ class Settings:
         return self.max_upload_mb * BYTES_PER_MB
 
     @classmethod
-    def from_env(cls, env: Mapping[str, str] | None = None) -> Self:
-        """Lê as variáveis de ambiente (ou do mapeamento informado, útil em testes)."""
+    def from_env(cls, env: Mapping[str, str] | None = None, *, detect_static: bool = False) -> Self:
+        """Lê as variáveis de ambiente (ou do mapeamento informado, útil em testes).
+
+        Com `detect_static`, usa `frontend/dist` (relativo à pasta atual) quando
+        `REPORT_STATIC_DIR` não foi informado e a interface já foi compilada.
+        """
         source = os.environ if env is None else env
         origins = tuple(o.strip() for o in source.get("CORS_ORIGINS", "").split(",") if o.strip())
         static = source.get("REPORT_STATIC_DIR", "").strip()
+        if not static and detect_static and (DEFAULT_STATIC_DIR / "index.html").is_file():
+            static = str(DEFAULT_STATIC_DIR)
         return cls(
             workdir=Path(source.get("REPORT_WORKDIR", "").strip() or "work"),
             max_upload_mb=_positive_int(source, "REPORT_MAX_UPLOAD_MB", 2048),

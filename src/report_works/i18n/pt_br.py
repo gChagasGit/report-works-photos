@@ -69,6 +69,12 @@ ERR_ZIP_UNSAFE = "O ZIP contém um caminho inseguro: {name}"
 ERR_SECTION_ID_INVALID = "Identificador de seção inválido: {value}"
 ERR_SETTING_INVALID = "Valor inválido para {name}: {value}"
 
+# --- Linha de comando ----------------------------------------------------------
+MSG_SERVER_URL = "Abra {url} no navegador para usar o gerador de relatórios."
+MSG_NO_FRONTEND = (
+    "A interface ainda não foi compilada (frontend/dist). Só a API está disponível, em {url}/docs."
+)
+
 # --- Descrição de erros de validação (campo: motivo) -------------------------
 FIELD_ERROR = "{field}: {reason}"
 REASON_MISSING = "campo obrigatório"

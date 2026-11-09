@@ -1,0 +1,1627 @@
+{
+  "components": {
+    "schemas": {
+      "Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post",
+        "type": "object"
+      },
+      "Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post": {
+        "properties": {
+          "files": {
+            "items": {
+              "contentMediaType": "application/octet-stream",
+              "type": "string"
+            },
+            "title": "Files",
+            "type": "array"
+          }
+        },
+        "required": [
+          "files"
+        ],
+        "title": "Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post",
+        "type": "object"
+      },
+      "Body_upload_template_api_workspaces__workspace_id__template_put": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_template_api_workspaces__workspace_id__template_put",
+        "type": "object"
+      },
+      "ErrorOut": {
+        "description": "Corpo de erro: mensagens em português e, se houver, os problemas de validação.",
+        "properties": {
+          "detail": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Detail",
+            "type": "array"
+          },
+          "issues": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/IssueOut"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorOut",
+        "type": "object"
+      },
+      "ImageMode": {
+        "description": "Como a foto entra na planilha.",
+        "enum": [
+          "in_cell",
+          "floating"
+        ],
+        "title": "ImageMode",
+        "type": "string"
+      },
+      "IssueOut": {
+        "description": "Um problema de validação.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "section_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section Id"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "severity",
+          "message"
+        ],
+        "title": "IssueOut",
+        "type": "object"
+      },
+      "JobOut": {
+        "description": "Estado de uma tarefa de geração.",
+        "properties": {
+          "done": {
+            "title": "Done",
+            "type": "integer"
+          },
+          "download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Download Url"
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "failures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Failures",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/IssueOut"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "percent": {
+            "title": "Percent",
+            "type": "number"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "workspace_id": {
+            "title": "Workspace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "workspace_id",
+          "state",
+          "done",
+          "total",
+          "percent",
+          "message",
+          "failures",
+          "issues",
+          "errors"
+        ],
+        "title": "JobOut",
+        "type": "object"
+      },
+      "JobRequest": {
+        "description": "Pedido de geração.",
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/ReportConfig"
+          },
+          "workspace_id": {
+            "title": "Workspace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "config"
+        ],
+        "title": "JobRequest",
+        "type": "object"
+      },
+      "LayoutSettings": {
+        "additionalProperties": false,
+        "description": "Parâmetros de posicionamento das imagens (antes fixos em `app.py`).",
+        "properties": {
+          "block_gap": {
+            "default": 2,
+            "minimum": 0.0,
+            "title": "Block Gap",
+            "type": "integer"
+          },
+          "default_min_row_height": {
+            "default": 23.25,
+            "exclusiveMinimum": 0.0,
+            "title": "Default Min Row Height",
+            "type": "number"
+          },
+          "fixed_width_px": {
+            "default": 390,
+            "exclusiveMinimum": 0.0,
+            "title": "Fixed Width Px",
+            "type": "integer"
+          },
+          "image_mode": {
+            "$ref": "#/components/schemas/ImageMode",
+            "default": "in_cell"
+          },
+          "image_span": {
+            "default": 10,
+            "exclusiveMinimum": 0.0,
+            "title": "Image Span",
+            "type": "integer"
+          },
+          "max_image_px": {
+            "default": 1600,
+            "exclusiveMinimum": 0.0,
+            "title": "Max Image Px",
+            "type": "integer"
+          },
+          "photo_columns": {
+            "items": {
+              "pattern": "^[A-Z]{1,3}$",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Photo Columns",
+            "type": "array"
+          },
+          "row_spacing": {
+            "default": 2,
+            "minimum": 0.0,
+            "title": "Row Spacing",
+            "type": "integer"
+          },
+          "sort_method": {
+            "$ref": "#/components/schemas/SortMethod",
+            "default": "date"
+          }
+        },
+        "title": "LayoutSettings",
+        "type": "object"
+      },
+      "PathsConfig": {
+        "additionalProperties": false,
+        "description": "Caminhos de trabalho; todos opcionais porque a API usa um diretório de trabalho.",
+        "properties": {
+          "base_images": {
+            "anyOf": [
+              {
+                "format": "path",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Images"
+          },
+          "output": {
+            "anyOf": [
+              {
+                "format": "path",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output"
+          },
+          "template": {
+            "anyOf": [
+              {
+                "format": "path",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template"
+          }
+        },
+        "title": "PathsConfig",
+        "type": "object"
+      },
+      "PhotoCountsOut": {
+        "description": "Fotos guardadas por pasta de seção.",
+        "properties": {
+          "sections": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Sections",
+            "type": "object"
+          }
+        },
+        "required": [
+          "sections"
+        ],
+        "title": "PhotoCountsOut",
+        "type": "object"
+      },
+      "ProjectMetadata": {
+        "additionalProperties": false,
+        "description": "Metadados do projeto e aba alvo da planilha.",
+        "properties": {
+          "default_font": {
+            "default": "Arial",
+            "title": "Default Font",
+            "type": "string"
+          },
+          "default_font_size": {
+            "default": 18,
+            "exclusiveMinimum": 0.0,
+            "title": "Default Font Size",
+            "type": "integer"
+          },
+          "project_name": {
+            "default": "Relatório",
+            "title": "Project Name",
+            "type": "string"
+          },
+          "target_sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "Relatório fotográfico",
+            "title": "Target Sheet"
+          }
+        },
+        "title": "ProjectMetadata",
+        "type": "object"
+      },
+      "ReportConfig": {
+        "additionalProperties": false,
+        "description": "Configuração completa de um relatório.",
+        "properties": {
+          "layout_settings": {
+            "$ref": "#/components/schemas/LayoutSettings"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/PathsConfig"
+          },
+          "project_metadata": {
+            "$ref": "#/components/schemas/ProjectMetadata"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/SectionConfig"
+            },
+            "minItems": 1,
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sections"
+        ],
+        "title": "ReportConfig",
+        "type": "object"
+      },
+      "SectionConfig": {
+        "additionalProperties": false,
+        "description": "Uma seção do relatório: pasta de fotos + título no Excel.",
+        "properties": {
+          "fix_width": {
+            "default": false,
+            "title": "Fix Width",
+            "type": "boolean"
+          },
+          "group_sizes": {
+            "items": {
+              "exclusiveMinimum": 0.0,
+              "type": "integer"
+            },
+            "title": "Group Sizes",
+            "type": "array"
+          },
+          "id": {
+            "pattern": "^[a-z0-9_]+$",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SectionKind",
+            "default": "grid"
+          },
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "max_photos": {
+            "minimum": 1.0,
+            "title": "Max Photos",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "max_photos"
+        ],
+        "title": "SectionConfig",
+        "type": "object"
+      },
+      "SectionKind": {
+        "description": "Como as fotos de uma seção são distribuídas na planilha.",
+        "enum": [
+          "grid",
+          "grouped"
+        ],
+        "title": "SectionKind",
+        "type": "string"
+      },
+      "SortMethod": {
+        "description": "Critério de ordenação das fotos de uma pasta.",
+        "enum": [
+          "date",
+          "name"
+        ],
+        "title": "SortMethod",
+        "type": "string"
+      },
+      "TemplateSummary": {
+        "description": "O que a interface precisa saber do template enviado.",
+        "properties": {
+          "max_row": {
+            "title": "Max Row",
+            "type": "integer"
+          },
+          "sheet_name": {
+            "title": "Sheet Name",
+            "type": "string"
+          },
+          "sheets": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sheets",
+            "type": "array"
+          },
+          "target_found": {
+            "title": "Target Found",
+            "type": "boolean"
+          },
+          "titles": {
+            "items": {
+              "$ref": "#/components/schemas/TitleOut"
+            },
+            "title": "Titles",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sheets",
+          "sheet_name",
+          "target_found",
+          "max_row",
+          "titles"
+        ],
+        "title": "TemplateSummary",
+        "type": "object"
+      },
+      "TitleOut": {
+        "description": "Texto encontrado na coluna de títulos do template.",
+        "properties": {
+          "row": {
+            "title": "Row",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "row",
+          "text"
+        ],
+        "title": "TitleOut",
+        "type": "object"
+      },
+      "UploadOut": {
+        "description": "Resultado do envio de fotos soltas.",
+        "properties": {
+          "saved": {
+            "title": "Saved",
+            "type": "integer"
+          },
+          "skipped": {
+            "title": "Skipped",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "saved",
+          "skipped"
+        ],
+        "title": "UploadOut",
+        "type": "object"
+      },
+      "ValidationOut": {
+        "description": "Resultado da validação prévia; `blocking` impede a geração.",
+        "properties": {
+          "blocking": {
+            "title": "Blocking",
+            "type": "boolean"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/IssueOut"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "issues",
+          "blocking"
+        ],
+        "title": "ValidationOut",
+        "type": "object"
+      },
+      "WorkspaceOut": {
+        "description": "Área de trabalho criada.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "WorkspaceOut",
+        "type": "object"
+      },
+      "ZipOut": {
+        "description": "Resultado do envio de um ZIP: fotos por seção e arquivos ignorados.",
+        "properties": {
+          "sections": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Sections",
+            "type": "object"
+          },
+          "skipped": {
+            "title": "Skipped",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sections",
+          "skipped"
+        ],
+        "title": "ZipOut",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Gerador de Relatórios Fotográficos",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "description": "Verifica se o servidor responde.",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Api Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/api/jobs": {
+      "post": {
+        "description": "Inicia a geração do relatório em segundo plano.",
+        "operationId": "create_job_api_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Create Job"
+      }
+    },
+    "/api/jobs/{job_id}": {
+      "get": {
+        "description": "Estado atual de uma geração.",
+        "operationId": "get_job_api_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Get Job"
+      }
+    },
+    "/api/jobs/{job_id}/download": {
+      "get": {
+        "description": "Baixa o relatório pronto.",
+        "operationId": "download_api_jobs__job_id__download_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Download"
+      }
+    },
+    "/api/jobs/{job_id}/events": {
+      "get": {
+        "description": "Andamento da geração como Server-Sent Events, até o fim da tarefa.",
+        "operationId": "job_events_api_jobs__job_id__events_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Job Events"
+      }
+    },
+    "/api/workspaces": {
+      "post": {
+        "description": "Cria uma área de trabalho para um relatório.",
+        "operationId": "create_workspace_api_workspaces_post",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Create Workspace"
+      }
+    },
+    "/api/workspaces/{workspace_id}/photos": {
+      "get": {
+        "description": "Quantidade de fotos guardadas por pasta de seção.",
+        "operationId": "photo_counts_api_workspaces__workspace_id__photos_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoCountsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Photo Counts"
+      }
+    },
+    "/api/workspaces/{workspace_id}/photos/zip": {
+      "post": {
+        "description": "Envia um ZIP com uma pasta por seção (nome da pasta = identificador da seção).",
+        "operationId": "upload_photos_zip_api_workspaces__workspace_id__photos_zip_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_photos_zip_api_workspaces__workspace_id__photos_zip_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZipOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Upload Photos Zip"
+      }
+    },
+    "/api/workspaces/{workspace_id}/photos/{section_id}": {
+      "post": {
+        "description": "Envia fotos soltas para a pasta de uma seção.",
+        "operationId": "upload_section_photos_api_workspaces__workspace_id__photos__section_id__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "section_id",
+            "required": true,
+            "schema": {
+              "title": "Section Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_section_photos_api_workspaces__workspace_id__photos__section_id__post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Upload Section Photos"
+      }
+    },
+    "/api/workspaces/{workspace_id}/template": {
+      "get": {
+        "description": "Resume o template já enviado.",
+        "operationId": "get_template_api_workspaces__workspace_id__template_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "target_sheet",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "Relatório fotográfico",
+              "title": "Target Sheet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Get Template"
+      },
+      "put": {
+        "description": "Envia o template Excel e devolve abas e títulos encontrados.",
+        "operationId": "upload_template_api_workspaces__workspace_id__template_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "target_sheet",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "Relatório fotográfico",
+              "title": "Target Sheet"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_template_api_workspaces__workspace_id__template_put"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Upload Template"
+      }
+    },
+    "/api/workspaces/{workspace_id}/validate": {
+      "post": {
+        "description": "Validação prévia: títulos no template, pastas, contagem de fotos e espaço no layout.",
+        "operationId": "validate_api_workspaces__workspace_id__validate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Validate"
+      }
+    }
+  }
+}

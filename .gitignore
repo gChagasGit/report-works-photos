@@ -61,9 +61,9 @@ images/
 images_organized/
 
 # ==============================================================================
-# Scripts e dados de teste manuais (saídas de ~35 MB cada)
+# Scripts e dados de teste manuais (saídas de ~35 MB cada); só a pasta da raiz
 # ==============================================================================
-test/
+/test/
 
 # ==============================================================================
 # Logs

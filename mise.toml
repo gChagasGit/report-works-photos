@@ -4,21 +4,47 @@ uv = "latest"
 node = "22"
 
 [tasks.dev]
-description = "Sobe o servidor de desenvolvimento (API)"
-run = "uv run python main.py"
+description = "Sobe a API (http://127.0.0.1:8000); o frontend roda em outro terminal com `mise run dev-web`"
+run = "uv run python -m report_works"
+
+[tasks.dev-web]
+description = "Sobe o frontend com recarga automática (http://localhost:5173, encaminha /api para a API)"
+dir = "frontend"
+run = "npm run dev"
+
+[tasks.install]
+description = "Instala as dependências do backend e do frontend"
+run = [
+  "uv sync",
+  "npm --prefix frontend ci",
+]
+
+[tasks.api-types]
+description = "Regenera o contrato OpenAPI e os tipos TypeScript do frontend"
+run = [
+  "uv run python -m report_works.export_openapi frontend/openapi.json",
+  "npm --prefix frontend run api:types",
+]
 
 [tasks.test]
-description = "Executa os testes"
-run = "uv run pytest"
+description = "Executa os testes do backend e do frontend"
+run = [
+  "uv run pytest",
+  "npm --prefix frontend test",
+]
 
 [tasks.lint]
-description = "Lint, formatação e tipos"
+description = "Lint, formatação e tipos do backend e do frontend"
 run = [
   "uv run ruff check .",
   "uv run ruff format --check .",
   "uv run pyright",
+  "npm --prefix frontend run lint",
 ]
 
 [tasks.build]
-description = "Gera o pacote Python (o frontend entra na etapa 8)"
-run = "uv build"
+description = "Compila o frontend (frontend/dist) e gera o pacote Python"
+run = [
+  "npm --prefix frontend run build",
+  "uv build",
+]

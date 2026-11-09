@@ -52,6 +52,20 @@ Configuração por variáveis de ambiente (nada de `.bat` ou edição de arquivo
 
 Fluxo da API: `POST /api/workspaces` → `PUT .../template` (envia o `.xlsx` e recebe abas e títulos) → `POST .../photos/zip` (uma pasta por seção; o nome da pasta é o `id`, em minúsculas) ou `POST .../photos/{id}` → `POST .../validate` (títulos, pastas, contagens e espaço no layout, em português) → `POST /api/jobs` → `GET /api/jobs/{id}/events` (andamento em tempo real) → `GET /api/jobs/{id}/download`. A seção em `config_exemple.yaml` pode ser enviada como corpo da validação e da geração (sem `paths`). O modo `image_mode: in_cell` (padrão) coloca cada foto dentro da célula, já enquadrada na proporção do bloco (ver `docs/spikes/place-in-cell.md`).
 
+### Nova interface web (em construção)
+
+A interface em `frontend/` (React + TypeScript + Mantine) substituirá o Streamlit. Em desenvolvimento, use dois terminais: `mise run dev` (ou `uv run python -m report_works`) para a API e `mise run dev-web` (ou `npm --prefix frontend run dev`) para a interface em `http://localhost:5173`. Sem `mise`: `uv sync` e `npm --prefix frontend ci` preparam as dependências.
+
+O fluxo é guiado em cinco passos, sem diálogos do sistema operacional:
+
+1.  **Template**: envie o `.xlsx`; a interface mostra as abas e os títulos encontrados na coluna B.
+2.  **Fotos**: envie um ZIP com uma pasta por seção (o nome da pasta é o `id` da seção); também é possível enviar fotos de uma seção em **Seções**.
+3.  **Seções**: defina pasta, título, máximo de fotos e opções. O título é conferido **na hora** contra o template (aceita diferença de maiúsculas e espaços) e o `id` é validado; as contagens de fotos aparecem por pasta.
+4.  **Conferência**: o servidor confere títulos, pastas, contagem de fotos e espaço no layout a cada alteração; problemas que impedem a geração bloqueiam o avanço.
+5.  **Gerar**: acompanha o andamento e oferece o download do relatório.
+
+Quando o contrato da API muda, regenere os tipos com `mise run api-types` (ou `uv run python -m report_works.export_openapi frontend/openapi.json` e `npm --prefix frontend run api:types`); um teste do backend avisa se o contrato versionado ficou desatualizado.
+
 ### Comandos de desenvolvimento
 
 *   Testes: `uv run pytest`

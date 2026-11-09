@@ -35,6 +35,23 @@ Para que o gerador funcione corretamente, você precisa garantir que possui:
 4.  **Encerrar**:
     *   Para desligar o servidor, volte ao terminal (tela preta) e pressione **CTRL+C**.
 
+### Nova API (em construção)
+
+O novo servidor FastAPI substituirá o Streamlit. Para subir: `uv run python -m report_works` (documentação interativa em `http://127.0.0.1:8000/docs`). Ele usa o Excel instalado (modo "Colocar na Célula") e gera o relatório em segundo plano.
+
+Configuração por variáveis de ambiente (nada de `.bat` ou edição de arquivos):
+
+| Variável | Padrão | Significado |
+|---|---|---|
+| `REPORT_WORKDIR` | `./work` | pasta de envios e relatórios (`work/` não é versionada) |
+| `REPORT_MAX_UPLOAD_MB` | `2048` | limite de cada envio |
+| `CORS_ORIGINS` | vazio | origens permitidas, separadas por vírgula |
+| `REPORT_STATIC_DIR` | vazio | frontend compilado, servido em `/` |
+| `REPORT_HOST` / `REPORT_PORT` | `127.0.0.1` / `8000` | endereço do servidor |
+| `REPORT_RETENTION_HOURS` | `24` | tempo de guarda das áreas de trabalho |
+
+Fluxo da API: `POST /api/workspaces` → `PUT .../template` (envia o `.xlsx` e recebe abas e títulos) → `POST .../photos/zip` (uma pasta por seção; o nome da pasta é o `id`, em minúsculas) ou `POST .../photos/{id}` → `POST .../validate` (títulos, pastas, contagens e espaço no layout, em português) → `POST /api/jobs` → `GET /api/jobs/{id}/events` (andamento em tempo real) → `GET /api/jobs/{id}/download`. A seção em `config_exemple.yaml` pode ser enviada como corpo da validação e da geração (sem `paths`). O modo `image_mode: in_cell` (padrão) coloca cada foto dentro da célula, já enquadrada na proporção do bloco (ver `docs/spikes/place-in-cell.md`).
+
 ### Comandos de desenvolvimento
 
 *   Testes: `uv run pytest`

@@ -87,3 +87,6 @@ desktop.ini
 
 # Worktrees temporários de agentes
 .claude/worktrees/
+
+# Áreas de trabalho da API (envios e relatórios gerados)
+work/

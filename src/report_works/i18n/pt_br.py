@@ -50,6 +50,25 @@ ISSUE_BEYOND_TEMPLATE = (
     'A seção "{label}" ocupa até a linha {last}, além do fim do template (linha {template_last}).'
 )
 
+# --- Geração do relatório ----------------------------------------------------
+ERR_VALIDATION_FAILED = "Há problemas que impedem a geração do relatório."
+PROGRESS_INSERTING = "{section}: foto {done} de {total}"
+PROGRESS_SAVING = "Salvando o relatório..."
+PROGRESS_DONE = "Relatório concluído."
+
+# --- API: áreas de trabalho, envios e tarefas ----------------------------------
+ERR_WORKSPACE_NOT_FOUND = "Área de trabalho não encontrada."
+ERR_UNEXPECTED = "Erro inesperado ao gerar o relatório. Consulte o registro do servidor."
+ERR_JOB_NOT_FOUND = "Tarefa não encontrada."
+ERR_JOB_NOT_READY = "O relatório ainda não está pronto."
+ERR_TEMPLATE_NOT_UPLOADED = "Envie o template Excel antes de continuar."
+ERR_UPLOAD_TOO_LARGE = "O envio excede o limite de {limit_mb} MB."
+ERR_UPLOAD_EXTENSION = "Tipo de arquivo não permitido: {name}"
+ERR_ZIP_INVALID = "O arquivo ZIP é inválido."
+ERR_ZIP_UNSAFE = "O ZIP contém um caminho inseguro: {name}"
+ERR_SECTION_ID_INVALID = "Identificador de seção inválido: {value}"
+ERR_SETTING_INVALID = "Valor inválido para {name}: {value}"
+
 # --- Descrição de erros de validação (campo: motivo) -------------------------
 FIELD_ERROR = "{field}: {reason}"
 REASON_MISSING = "campo obrigatório"

@@ -66,6 +66,10 @@ O fluxo é guiado em cinco passos, sem diálogos do sistema operacional:
 
 Quando o contrato da API muda, regenere os tipos com `mise run api-types` (ou `uv run python -m report_works.export_openapi frontend/openapi.json` e `npm --prefix frontend run api:types`); um teste do backend avisa se o contrato versionado ficou desatualizado.
 
+### Docker (esboço, inativo)
+
+Em `docs/docker/` há o esboço de `Dockerfile` e `compose.yaml` para rodar em container no futuro (configuração só por variáveis de ambiente, sem interface gráfica do sistema operacional). **Não está ativo e nunca foi construído.** O container ainda não consegue gerar relatórios: o modo "Colocar na Célula" depende do Microsoft Excel, que não roda em Linux; é preciso um escritor de imagens sem Excel (ver `docs/docker/README.md`).
+
 ### Comandos de desenvolvimento
 
 *   Testes: `uv run pytest`

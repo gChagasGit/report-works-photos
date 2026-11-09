@@ -1,0 +1,17 @@
+.git
+.venv
+.pytest_cache
+.ruff_cache
+__pycache__
+node_modules
+frontend/node_modules
+frontend/dist
+work
+test
+templates/relatorio_final*.xlsx
+images
+images_organized
+config.yaml
+.env
+.env.*
+.claude

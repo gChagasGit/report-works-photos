@@ -1,11 +1,14 @@
 """Conversão de erros do Pydantic em mensagens em português."""
 
+from collections.abc import Iterable, Mapping
+from typing import Any
+
 from pydantic import ValidationError
 
 from report_works.i18n import pt_br
 
 
-def _reason(error_type: str, message: str, context: dict[str, object] | None) -> str:
+def _reason(error_type: str, message: str, context: Mapping[str, Any] | None) -> str:
     ctx = context or {}
     match error_type:
         case "missing":
@@ -28,11 +31,21 @@ def _reason(error_type: str, message: str, context: dict[str, object] | None) ->
             return pt_br.REASON_INVALID
 
 
-def describe_validation_errors(error: ValidationError) -> list[str]:
-    """Uma mensagem em português por problema, no formato `campo: motivo`."""
+def describe_error_items(items: Iterable[Mapping[str, Any]]) -> list[str]:
+    """Uma mensagem em português por item, no formato `campo: motivo`.
+
+    Aceita os itens de `ValidationError.errors()` e de `RequestValidationError.errors()`;
+    o prefixo `body` da API é omitido do nome do campo.
+    """
     messages: list[str] = []
-    for item in error.errors():
-        field = ".".join(str(part) for part in item["loc"])
-        reason = _reason(item["type"], item["msg"], item.get("ctx"))
+    for item in items:
+        parts = [str(part) for part in item["loc"] if part != "body"]
+        field = ".".join(parts)
+        reason = _reason(str(item["type"]), str(item["msg"]), item.get("ctx"))
         messages.append(pt_br.FIELD_ERROR.format(field=field, reason=reason) if field else reason)
     return messages
+
+
+def describe_validation_errors(error: ValidationError) -> list[str]:
+    """Mensagens em português de um `ValidationError` do Pydantic."""
+    return describe_error_items(error.errors())

@@ -17,6 +17,30 @@ class TemplateError(ReportError):
     """O template Excel não pôde ser lido."""
 
 
+class WorkspaceNotFoundError(ReportError):
+    """A área de trabalho informada não existe."""
+
+
+class JobNotFoundError(ReportError):
+    """A tarefa informada não existe."""
+
+
+class JobNotReadyError(ReportError):
+    """O relatório da tarefa ainda não foi gerado."""
+
+
+class UploadTooLargeError(ReportError):
+    """O envio ultrapassa o limite configurado."""
+
+
+class UnsupportedFileError(ReportError):
+    """Tipo de arquivo, ZIP ou caminho não aceito."""
+
+
+class SettingError(ReportError):
+    """Variável de ambiente com valor inválido."""
+
+
 class LayoutError(ReportError):
     """Não foi possível calcular a posição das fotos (por exemplo, seção sem título)."""
 

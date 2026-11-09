@@ -27,11 +27,9 @@ dev = [
     "types-openpyxl>=3.1.5.20261017",
     "httpx>=0.28.1",
 ]
-# Interface Streamlit antiga; sai junto com app.py na etapa de limpeza.
-legacy = ["streamlit>=1.40"]
 
 [tool.uv]
-default-groups = ["dev", "legacy"]
+default-groups = ["dev"]
 
 [build-system]
 requires = ["hatchling"]
@@ -41,8 +39,7 @@ build-backend = "hatchling.build"
 packages = ["src/report_works"]
 
 [tool.pytest.ini_options]
-# "." permite importar o código legado (scripts/) enquanto ele não é portado para src/.
-pythonpath = [".", "src"]
+pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-ra"
 
@@ -50,8 +47,8 @@ addopts = "-ra"
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
-# Código legado: entra no lint quando for portado para src/ (ver PLAN.md).
-extend-exclude = ["app.py", "main.py", "scripts", "test", "docs/spikes"]
+# Scripts de experimento (spikes) e a pasta local de testes manuais ficam fora do lint.
+extend-exclude = ["test", "docs/spikes"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "C4", "RUF", "ANN"]
@@ -62,7 +59,7 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "C4", "RUF", "ANN"]
 [tool.pyright]
 include = ["src", "tests"]
 pythonVersion = "3.12"
-# Strict só no código novo; os testes chamam o código legado (sem tipos) até ele ser portado.
+# Strict no código de produção; testes em modo padrão.
 typeCheckingMode = "standard"
 strict = ["src"]
 reportMissingTypeStubs = false
